@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import StudentLoginView, StudentRegisterView, InstructorLoginView, InstructorRegisterView, InstructorListView, InstructorDetailView, ConsultationSlotListCreateView, ConsultationSlotDetailView, AvailableSlotListView, ConsultationBookingListCreateView, ConsultationBookingCancelView, StudentBookingHistoryView, InstructorRosterView, AttendanceUpdateView, StudentProfileMetricView, InstructorSlotListCreateView, InstructorSlotDetailView, InstructorBookingListView, InstructorBookingDecisionView, InstructorBookingAttendanceView, InstructorAnalyticsView
+from .views import StudentLoginView, StudentRegisterView, InstructorLoginView, InstructorRegisterView, InstructorListView, InstructorDetailView, ConsultationSlotListCreateView, ConsultationSlotDetailView, AvailableSlotListView, ConsultationBookingListCreateView, ConsultationBookingCancelView, StudentBookingHistoryView, InstructorRosterView, AttendanceUpdateView, StudentProfileMetricView, InstructorSlotListCreateView, InstructorSlotDetailView, InstructorBookingListView, InstructorBookingDecisionView, InstructorBookingAttendanceView, InstructorAnalyticsView, InstructorProfileView
 
 urlpatterns = [
     path('student/login/', StudentLoginView.as_view(), name='student-login',),
@@ -22,5 +22,6 @@ urlpatterns = [
     path('instructor/bookings/', InstructorBookingListView.as_view(), name='instructor-booking-list'),
     path('instructor/bookings/<int:pk>/decision/', InstructorBookingDecisionView.as_view(), name='instructor-booking-decision'),
     path('instructor/me/booking/<int:pk>/attendance', InstructorBookingAttendanceView.as_view(), name='instructor-booking-attendance'),
-    path('instructor/me/analytics/', InstructorAnalyticsView.as_view(), name='instructor-analytics')
+    path('instructor/me/analytics/', InstructorAnalyticsView.as_view(), name='instructor-analytics'),
+    path('instructor/me/profile/', InstructorProfileView.as_view(), name='instructor-profile')
 ]
