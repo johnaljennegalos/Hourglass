@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'services/api_service.dart';
-
-void main() {
-  runApp(const MaterialApp(home: ConnectionTestScreen()));
-}
+import '../services/api_service.dart';
 
 class ConnectionTestScreen extends StatefulWidget {
   const ConnectionTestScreen({super.key});
