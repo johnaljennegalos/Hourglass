@@ -654,3 +654,31 @@ class InstructorAttendanceSerializer(serializers.ModelSerializer):
 
         return attrs
 
+
+class InstructorAnalyticsSerializer(serializers.Serializer):
+    total_consultations = serializers.IntegerField(read_only=True)
+    completed_consultations = serializers.IntegerField(read_only=True)
+    no_show_consultations = serializers.IntegerField(read_only=True)
+    cancelled_consultations = serializers.IntegerField(read_only=True)
+    upcoming_confirmed_count = serializers.IntegerField(read_only=True)
+    completion_rate = serializers.FloatField(read_only=True)
+    total_hours_consulted = serializers.FloatField(read_only=True)
+
+
+class InstructorSelfProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'first_name',
+            'last_name',
+            'email',
+            'address',
+            'contact_number',
+            'department',
+            'specialization',
+            'employee_id',
+            'role'
+        ]
+
+        read_only_fields = ['id', 'email', 'role', 'employee_id']
