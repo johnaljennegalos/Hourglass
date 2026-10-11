@@ -15,7 +15,7 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 
 
-from .serializers import StudentLoginSerializer, StudentRegistrationSerializer, InstructorLoginSerializer, InstructorRegistrationSerializer, InstructorPublicProfileSerializer, ConsultationSlotSerializer, ConsultationBookingSerializer, ConsultationSlotDetailSerializer, StudentBookingHistorySerializer, InstructorRosterSerializer, AttendanceUpdateSerializer, StudentProfileMetricsSerializer, InstructorBookingDetailSerializer, InstructorBookingDecisionSerializer, InstructorAttendanceSerializer, InstructorAnalyticsSerializer
+from .serializers import StudentLoginSerializer, StudentRegistrationSerializer, InstructorLoginSerializer, InstructorRegistrationSerializer, InstructorPublicProfileSerializer, ConsultationSlotSerializer, ConsultationBookingSerializer, ConsultationSlotDetailSerializer, StudentBookingHistorySerializer, InstructorRosterSerializer, AttendanceUpdateSerializer, StudentProfileMetricsSerializer, InstructorBookingDetailSerializer, InstructorBookingDecisionSerializer, InstructorAttendanceSerializer, InstructorAnalyticsSerializer, InstructorSelfProfileSerializer
 
 from .permissions import IsStudent, IsInstructor
 from .models import User, ConsultationSlot, ConsultationBooking
@@ -376,6 +376,14 @@ class InstructorAnalyticsView(APIView):
         serializers = InstructorAnalyticsSerializer(analytics_payload)
         # serializers.is_valid(raise_exception=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
+
+
+class InstructorProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated, IsInstructor]
+    serializer_class = InstructorSelfProfileSerializer
+
+    def get_object(self):
+        return self.request.user
 
 
 
