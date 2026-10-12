@@ -1,0 +1,72 @@
+import 'dart:convert';
+import '../services/api_service.dart';
+import '../services/auth_service.dart';
+
+class InstructorService {
+
+  static Future<Map<String, dynamic>?> getProfile() async {
+
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot fetch profile: User is not authenticated.');
+      return null;
+    }
+
+    try{
+      final response = await ApiService.get('/instructor/me/profile/', token: authToken);
+
+      if (response.statusCode == 200){
+        final Map<String, dynamic> profileData = jsonDecode(response.body);
+        return profileData;
+      } else if (response.statusCode == 401){
+        print('Unauthorized: Access token expired or invalid.');
+        return null;
+      } else if (response.statusCode == 403){
+        print('Forbidden: Current user is not registered as an instructor.');
+        return null;
+      } else {
+        print(response.statusCode);
+        return null;
+      }
+    } catch (e) {
+      print('An error occurred while fetching instructor profile: $e');
+      return null;
+    }
+
+  }
+
+
+  static Future<bool> updateProfile(Map<String, dynamic> updateData) async {
+
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot fetch profile: User is not authenticated.');
+      return false;
+    }
+
+    try{
+      final response = await ApiService.patch('/instructor/me/profile/', body: updateData, token: authToken);
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        print('Profile updated successfully.');
+        return true;
+      } else if (response.statusCode == 400) {
+        print('Validation error [400]: ${response.body}');
+        return false;
+      } else if (response.statusCode == 401 || response.statusCode == 403) {
+        print('Unauthorized [401]: Access token expired.');
+        return false;
+      } else {
+        print('Failed to update profile [${response.statusCode}]: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('An error occurred while updating profile: $e');
+      return false;
+    }
+
+  }
+
+}

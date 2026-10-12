@@ -36,6 +36,23 @@ class ApiService{
     ).timeout(const Duration(seconds: 10));
   }
 
+  static Future<http.Response> patch(String endpoint, {required Map<String, dynamic> body, String? token,}) async {
+
+    final url = Uri.parse('$baseUrl$endpoint');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      if (token != null) 'Authorization' : 'Bearer $token',
+    };
+
+    return await http.patch(
+      url,
+      headers: headers,
+      body: jsonEncode(body),
+    ).timeout(const Duration(seconds: 10));
+
+  }
+
   static Future<int> checkConnection() async {
     try{
       final response = await http.get(
