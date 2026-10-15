@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:hourglass/views/pages/student/student_registration.dart';
 
 class RoleSelectionPage extends StatelessWidget {
   const RoleSelectionPage({super.key});
@@ -28,7 +29,14 @@ class RoleSelectionPage extends StatelessWidget {
                   SizedBox(height: 30.0),
                   OutlinedButton.icon(
                     onPressed: () {
-
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) {
+                                return StudentRegistration();
+                              },
+                          ),
+                      );
                       },
                     icon: const Icon(Icons.school_rounded, size: 22.0),
                     label: const Text('Student'),
