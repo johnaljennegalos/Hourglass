@@ -21,7 +21,6 @@ class WelcomePage extends StatelessWidget {
                 Lottie.asset('assets/lotties/hourly.json', height: 320.0, fit: BoxFit.contain,),
                 const SizedBox(height: 30.0),
                 const Text('Hourglass', style: TextStyle(
-                    // fontWeight: FontWeight.black,
                     fontSize: 40.0,
                     letterSpacing: -0.5,
                     color: Colors.black,
