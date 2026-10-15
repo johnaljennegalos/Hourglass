@@ -54,26 +54,35 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                           keyboardType: TextInputType.name,
                           decoration: InputDecoration(
                             labelText: 'Last Name',
+                              prefixIcon: Icon(Icons.person)
                           ),
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: 10.0),
-                  TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Contact Number',
-                      prefixIcon: Icon(Icons.phone),
-                    ),
-                  ),
-                  SizedBox(height: 10.0),
-                  TextField(
-                    keyboardType: TextInputType.streetAddress,
-                    decoration: InputDecoration(
-                      labelText: 'Address',
-                      prefixIcon: Icon(Icons.streetview),
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Contact Number',
+                          prefixIcon: Icon(Icons.phone),
+                        ),
+                      ),
+                      ),
+                      SizedBox(width: 20.0),
+                      Expanded(
+                          child: TextField(
+                            keyboardType: TextInputType.streetAddress,
+                            decoration: InputDecoration(
+                              labelText: 'Address',
+                              prefixIcon: Icon(Icons.streetview),
+                            ),
+                          ),
+                      )
+                    ],
                   ),
                   SizedBox(height: 10.0),
                   TextField(
@@ -163,7 +172,7 @@ class _StudentRegistrationState extends State<StudentRegistration> {
                       prefixIcon: Icon(Icons.password),
                     ),
                   ),
-                  SizedBox(height: 10.0),
+                  SizedBox(height: 40.0),
                   OutlinedButton.icon(
                     onPressed: () {
                       Navigator.push(
