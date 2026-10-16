@@ -84,56 +84,84 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                               ),
                             ),
                           ),
+                          SizedBox(height: 20.0),
                           TextFormField(
                             // controller: _firstNameController,
                             style: const TextStyle(color: Colors.black87),
                             decoration: const InputDecoration(
                               labelText: 'Last Name',
                               labelStyle: TextStyle(color: Colors.grey),
-                              prefixIcon: Icon(Icons.person_outline, color: Color(0xFF2563EB)),
+                              prefixIcon: Icon(Icons.person_4_outlined, color: Color(0xFF2563EB)),
                               border: UnderlineInputBorder(),
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Color(0xFF2563EB), width: 2.0),
                               ),
                             ),
                           ),
+                          SizedBox(height: 20.0),
                           TextFormField(
                             // controller: _firstNameController,
                             style: const TextStyle(color: Colors.black87),
                             decoration: const InputDecoration(
                               labelText: 'Username',
                               labelStyle: TextStyle(color: Colors.grey),
-                              prefixIcon: Icon(Icons.person_outline, color: Color(0xFF2563EB)),
+                              prefixIcon: Icon(Icons.account_circle_outlined, color: Color(0xFF2563EB)),
                               border: UnderlineInputBorder(),
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Color(0xFF2563EB), width: 2.0),
                               ),
                             ),
                           ),
+                          SizedBox(height: 20.0),
                           TextFormField(
                             // controller: _firstNameController,
                             style: const TextStyle(color: Colors.black87),
                             decoration: const InputDecoration(
                               labelText: 'Email',
                               labelStyle: TextStyle(color: Colors.grey),
-                              prefixIcon: Icon(Icons.person_outline, color: Color(0xFF2563EB)),
+                              prefixIcon: Icon(Icons.email_outlined, color: Color(0xFF2563EB)),
                               border: UnderlineInputBorder(),
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Color(0xFF2563EB), width: 2.0),
                               ),
                             ),
                           ),
+                          SizedBox(height: 20.0),
                           TextFormField(
                             // controller: _firstNameController,
                             style: const TextStyle(color: Colors.black87),
                             decoration: const InputDecoration(
                               labelText: 'Password',
                               labelStyle: TextStyle(color: Colors.grey),
-                              prefixIcon: Icon(Icons.person_outline, color: Color(0xFF2563EB)),
+                              prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF2563EB)),
                               border: UnderlineInputBorder(),
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Color(0xFF2563EB), width: 2.0),
                               ),
+                            ),
+                          ),
+                          SizedBox(height: 40.0),
+                          OutlinedButton.icon(
+                            onPressed: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) {
+                              //       return ();
+                              //     },
+                              //   ),
+                              // );
+                            },
+                            icon: const Icon(Icons.app_registration, size: 22.0),
+                            label: const Text('Register'),
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: Size(double.infinity, 50.0),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0)
+                              ),
+                              backgroundColor: Color(0xFF2563EB),
+                              foregroundColor: Colors.white,
+                              side: const BorderSide(color: Colors.blue, width: 1.0),
                             ),
                           ),
                         ],
