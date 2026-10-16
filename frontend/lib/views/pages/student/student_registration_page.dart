@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hourglass/services/student_service.dart';
 
+
 class StudentRegistrationPage extends StatefulWidget {
   const StudentRegistrationPage({super.key});
+
 
   @override
   State<StudentRegistrationPage> createState() => _StudentRegistrationPageState();
@@ -10,6 +14,22 @@ class StudentRegistrationPage extends StatefulWidget {
 
 class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
   final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    usernameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +99,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         children: [
                           const SizedBox(height: 20.0),
                           TextFormField(
-                            // controller: _firstNameController,
+                            controller: firstNameController,
                             style: const TextStyle(color: Colors.black87),
                             decoration: const InputDecoration(
                               labelText: 'First Name',
@@ -93,7 +113,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                           ),
                           SizedBox(height: 20.0),
                           TextFormField(
-                            // controller: _firstNameController,
+                            controller: lastNameController,
                             style: const TextStyle(color: Colors.black87),
                             decoration: const InputDecoration(
                               labelText: 'Last Name',
@@ -107,7 +127,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                           ),
                           SizedBox(height: 20.0),
                           TextFormField(
-                            // controller: _firstNameController,
+                            controller: usernameController,
                             style: const TextStyle(color: Colors.black87),
                             decoration: const InputDecoration(
                               labelText: 'Username',
@@ -121,7 +141,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                           ),
                           SizedBox(height: 20.0),
                           TextFormField(
-                            // controller: _firstNameController,
+                            controller: emailController,
                             style: const TextStyle(color: Colors.black87),
                             decoration: const InputDecoration(
                               labelText: 'Email',
@@ -135,7 +155,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                           ),
                           SizedBox(height: 20.0),
                           TextFormField(
-                            // controller: _firstNameController,
+                            controller: passwordController,
                             style: const TextStyle(color: Colors.black87),
                             decoration: const InputDecoration(
                               labelText: 'Password',
@@ -149,7 +169,69 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                           ),
                           SizedBox(height: 40.0),
                           OutlinedButton.icon(
-                            onPressed: () {
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()){
+
+                                try{
+
+                                  final response = await StudentService.registerStudent(
+                                    firstNameController.text.trim(),
+                                    lastNameController.text.trim(),
+                                    usernameController.text.trim(),
+                                    emailController.text.trim(),
+                                    passwordController.text.trim(),
+                                  );
+
+                                  if (response.statusCode == 201 || response.statusCode == 200) {
+                                    if (!mounted) return;
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Registration successful!'),
+                                        backgroundColor: Colors.green,
+                                      )
+                                    );
+
+                                    // TODO: Navigate to login screen or home page
+                                    // Navigator.pushReplacement(...);
+                                  } else if (response.statusCode == 400) {
+                                    if (!mounted) return;
+
+                                    final Map<String, dynamic> errors = jsonDecode(response.body);
+                                    final String firstError = errors.values.first[0].toString();
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Registration failes $firstError'),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  } else {
+                                    if (!mounted) return;
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Server error [${response.statusCode}]. Please try again.'),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  }
+
+                                } catch (e) {
+                                  if (!mounted) return;
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Network error: $e'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+
+                              }
+
+
+
                               // Navigator.push(
                               //   context,
                               //   MaterialPageRoute(

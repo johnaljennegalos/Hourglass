@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:hourglass/views/pages/student/student_registration.dart';
 import 'package:hourglass/views/pages/student/student_registration_page.dart';
 
 class RoleSelectionPage extends StatelessWidget {
