@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:hourglass/views/pages/register_page.dart';
+import 'package:hourglass/views/pages/role_selection_page.dart';
 import 'package:hourglass/views/pages/login_page.dart';
 
 
@@ -23,7 +23,7 @@ class WelcomePage extends StatelessWidget {
                 const Text('Hourglass', style: TextStyle(
                     fontSize: 40.0,
                     letterSpacing: -0.5,
-                    color: Colors.black,
+                    color: Color(0xFF2563EB),
                   ),),
                 const SizedBox(height: 10.0),
                 const Padding(
@@ -45,13 +45,13 @@ class WelcomePage extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) {
-                            return RegisterPage();
+                            return RoleSelectionPage();
                           },),
                       );
                     },
                   style: FilledButton.styleFrom(
                     minimumSize: Size(double.infinity, 40.0),
-                    backgroundColor: Colors.black,
+                    backgroundColor: Color(0xFF2563EB),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     shape: RoundedRectangleBorder(
@@ -67,7 +67,7 @@ class WelcomePage extends StatelessWidget {
                     children: <TextSpan>[
                       TextSpan(
                         text: 'Login',
-                        style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
+                        style: TextStyle(color: Color(0xFF2563EB), fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             Navigator.push(

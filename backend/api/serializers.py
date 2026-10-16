@@ -57,12 +57,12 @@ class StudentRegistrationSerializer(serializers.ModelSerializer):
             'password',
             'first_name',
             'last_name',
-            'student_id',
-            'course',
-            'year_level',
-            'section',
-            'address',
-            'contact_number',
+            # 'student_id',
+            # 'course',
+            # 'year_level',
+            # 'section',
+            # 'address',
+            # 'contact_number',
         ]
 
         extra_kwargs = {
