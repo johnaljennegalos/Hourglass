@@ -17,8 +17,15 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xFF2563EB),
-          elevation: 0,
-          iconTheme: IconThemeData(color: Colors.white)
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
+        leading: BackButton(
+          onPressed: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Column(
         children: [
