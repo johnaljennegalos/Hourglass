@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+import 'package:hourglass/services/student_service.dart';
 
 class StudentRegistration extends StatefulWidget {
   const StudentRegistration({super.key});

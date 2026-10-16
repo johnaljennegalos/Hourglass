@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:hourglass/views/pages/student/student_registration.dart';
+import 'package:hourglass/views/pages/student/student_registration_page.dart';
 
 class RoleSelectionPage extends StatelessWidget {
   const RoleSelectionPage({super.key});
@@ -33,7 +34,7 @@ class RoleSelectionPage extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) {
-                                return StudentRegistration();
+                                return StudentRegistrationPage();
                               },
                           ),
                       );
