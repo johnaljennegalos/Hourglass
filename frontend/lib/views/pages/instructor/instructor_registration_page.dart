@@ -200,12 +200,22 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
                               if (response.statusCode == 201 || response.statusCode == 200) {
                                 if (!mounted) return;
 
+                                setState(() {
+                                  firstNameController.clear();
+                                  lastNameController.clear();
+                                  usernameController.clear();
+                                  emailController.clear();
+                                  passwordController.clear();
+                                });
+
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text('Registration successful!'),
                                       backgroundColor: Colors.green,
                                     )
                                 );
+
+                                FocusScope.of(context).unfocus();
 
                                 // TODO: Navigate to login screen or home page
                                 // Navigator.pushReplacement(...);

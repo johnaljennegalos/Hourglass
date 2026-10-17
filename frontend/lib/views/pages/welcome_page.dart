@@ -40,7 +40,7 @@ class WelcomePage extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                FilledButton(
+                FilledButton.icon(
                     onPressed: () {
                       Navigator.push(
                           context,
@@ -49,6 +49,9 @@ class WelcomePage extends StatelessWidget {
                           },),
                       );
                     },
+                  label: const Text('Get Started'),
+                  icon: Icon(Icons.arrow_forward),
+                  iconAlignment: IconAlignment.end,
                   style: FilledButton.styleFrom(
                     minimumSize: Size(double.infinity, 40.0),
                     backgroundColor: Color(0xFF2563EB),
@@ -58,7 +61,7 @@ class WelcomePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16.0),
                     ),
                   ),
-                    child: Text('Register'),
+                    // child: Text('Get Started'),
                 ),
                 const SizedBox(height: 16.0,),
                 Text.rich(
