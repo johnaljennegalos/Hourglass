@@ -6,6 +6,31 @@ import '../services/auth_service.dart';
 
 class InstructorService {
 
+  static Future<http.Response> registerInstructor(String firstName, String lastName, String username, String email, String password) async{
+
+    final Map<String, String> body = {
+      'first_name': firstName,
+      'last_name': lastName,
+      'username': username,
+      'email': email,
+      'password': password
+    };
+
+    try {
+      final http.Response response = await ApiService.post(
+        '/instructor/register/',
+        body: body,
+      );
+
+      return response;
+    } catch (e) {
+      print('An error occurred during student registration: $e');
+      rethrow;
+    }
+
+  }
+
+
   static Future<Map<String, dynamic>?> getProfile() async {
 
     String? authToken = AuthService.accessToken;

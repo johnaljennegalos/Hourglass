@@ -96,6 +96,7 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
                       TextFormField(
                         controller: firstNameController,
                         style: const TextStyle(color: Colors.white),
+                        cursorColor: Colors.white60,
                         decoration: const InputDecoration(
                           labelText: 'First Name',
                           labelStyle: TextStyle(color: Colors.white),
@@ -113,6 +114,7 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
                       TextFormField(
                         controller: lastNameController,
                         style: const TextStyle(color: Colors.white),
+                        cursorColor: Colors.white60,
                         decoration: const InputDecoration(
                           labelText: 'Last Name',
                           labelStyle: TextStyle(color: Colors.white),
@@ -130,6 +132,7 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
                       TextFormField(
                         controller: usernameController,
                         style: const TextStyle(color: Colors.white),
+                        cursorColor: Colors.white60,
                         decoration: const InputDecoration(
                           labelText: 'Username',
                           labelStyle: TextStyle(color: Colors.white),
@@ -147,6 +150,7 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
                       TextFormField(
                         controller: emailController,
                         style: const TextStyle(color: Colors.white),
+                        cursorColor: Colors.white60,
                         decoration: const InputDecoration(
                           labelText: 'Email',
                           labelStyle: TextStyle(color: Colors.white),
@@ -164,6 +168,7 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
                       TextFormField(
                         controller: passwordController,
                         style: const TextStyle(color: Colors.white),
+                        cursorColor: Colors.white60,
                         decoration: const InputDecoration(
                           labelText: 'Password',
                           labelStyle: TextStyle(color: Colors.white),
