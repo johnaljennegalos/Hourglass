@@ -99,15 +99,15 @@ class InstructorRegistrationSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'username',
-            'employee_id',
+            # 'employee_id',
             'first_name',
             'last_name',
             'email',
             'password',
-            'contact_number',
-            'address',
-            'department',
-            'specialization'
+            # 'contact_number',
+            # 'address',
+            # 'department',
+            # 'specialization'
         ]
 
         extra_kwargs = {

@@ -1,10 +1,36 @@
 import 'dart:convert';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
+import 'package:http/http.dart' as http;
 
 //create equivalent method for every method define in views later
 
 class InstructorService {
+
+  static Future<http.Response> registerInstructor(String firstName, String lastName, String username, String email, String password) async{
+
+    final Map<String, String> body = {
+      'first_name': firstName,
+      'last_name': lastName,
+      'username': username,
+      'email': email,
+      'password': password
+    };
+
+    try {
+      final http.Response response = await ApiService.post(
+        '/instructor/register/',
+        body: body,
+      );
+
+      return response;
+    } catch (e) {
+      print('An error occurred during student registration: $e');
+      rethrow;
+    }
+
+  }
+
 
   static Future<Map<String, dynamic>?> getProfile() async {
 
