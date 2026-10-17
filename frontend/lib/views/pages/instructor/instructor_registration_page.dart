@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:hourglass/services/student_service.dart';
+import 'package:hourglass/services/instructor_service.dart';
 
 class InstructorRegistrationPage extends StatefulWidget {
   const InstructorRegistrationPage({super.key});
@@ -189,7 +189,7 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
 
                             try{
 
-                              final response = await StudentService.registerStudent(
+                              final response = await InstructorService.registerInstructor(
                                 firstNameController.text.trim(),
                                 lastNameController.text.trim(),
                                 usernameController.text.trim(),

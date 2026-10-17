@@ -1,6 +1,7 @@
 import 'dart:convert';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
+import 'package:http/http.dart' as http;
 
 //create equivalent method for every method define in views later
 
