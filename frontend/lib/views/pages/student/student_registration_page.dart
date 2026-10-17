@@ -67,7 +67,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                   ),
                 ),
                 Text(
-                  'Complete the form below to get started.',
+                  'Complete the form below to get started with your student account.',
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.normal,
@@ -86,8 +86,8 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30)
+                    topLeft: Radius.circular(23),
+                    topRight: Radius.circular(23)
                   ),
                 ),
                 child: SingleChildScrollView(
