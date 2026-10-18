@@ -8,6 +8,18 @@ class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFF2563EB),
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
+        leading: BackButton(
+          onPressed: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+
+            Navigator.pop(context);
+          },
+        ),
+      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
@@ -15,7 +27,7 @@ class SignInPage extends StatelessWidget {
             ClipPath(
               clipper: SigninWaveClipper(),
               child: Container(
-                height: 250,
+                height: 155,
                 color: const Color(0xFF2563EB),
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 40.0),
@@ -48,7 +60,7 @@ class SignInPage extends StatelessWidget {
                   child: Form(
                     child: Column(
                       children: [
-                        SizedBox(height: 50.0),
+                        SizedBox(height: 20.0),
                         TextFormField(
                           // controller: firstNameController,
                           style: const TextStyle(color: Colors.black87),
@@ -209,6 +221,34 @@ class SignInPage extends StatelessWidget {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+              child: Row(
+                children: const [
+                  Expanded(child: Divider(
+                    color: Colors.grey,
+                    thickness: 1.0,
+                  )),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      'OR',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Divider(
+                      color: Colors.grey,
+                      thickness: 1.0,
+                    ),
+                  ),
+                ],
+              )
+            )
           ],
         ),
       ),
