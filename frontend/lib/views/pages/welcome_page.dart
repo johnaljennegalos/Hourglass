@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:hourglass/views/pages/role_selection_page.dart';
-import 'package:hourglass/views/pages/login_page.dart';
+import 'package:hourglass/views/pages/sign_in_page.dart';
 
 
 class WelcomePage extends StatelessWidget {
@@ -69,7 +69,7 @@ class WelcomePage extends StatelessWidget {
                     text: 'Already have an account? ',
                     children: <TextSpan>[
                       TextSpan(
-                        text: 'Login',
+                        text: 'Sign in',
                         style: TextStyle(color: Color(0xFF2563EB), fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
@@ -77,7 +77,7 @@ class WelcomePage extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context){
-                                      return LoginPage();
+                                      return SignInPage();
                                     },
                                 )
                             );
