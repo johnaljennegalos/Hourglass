@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hourglass/services/student_service.dart';
 import 'package:hourglass/views/pages/role_selection_page.dart';
@@ -38,6 +38,36 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        // actions: [
+        //   Center(
+        //     child: Text('Already have an account?',
+        //     style: TextStyle(
+        //       color: Colors.white,
+        //       fontSize: 12.0
+        //     ),
+        //     ),
+        //   ),
+        //   TextButton(
+        //     style: TextButton.styleFrom(
+        //       padding: const EdgeInsets.only(left: 4, right: 20),
+        //       minimumSize: Size.zero,
+        //       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        //     ),
+        //     onPressed: () {
+        //       Navigator.pushReplacement(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => const SignInPage(),
+        //         ),
+        //       );
+        //     },
+        //     child: Text('Sign In', style: TextStyle(
+        //       color: Colors.white,
+        //       fontWeight: FontWeight.bold,
+        //       fontSize: 14.0
+        //     ),),
+        //   )
+        // ],
         backgroundColor: Color(0xFF2563EB),
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.white),
@@ -99,7 +129,7 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const SizedBox(height: 20.0),
+                          const SizedBox(height: 00.0),
                           TextFormField(
                             controller: firstNameController,
                             style: const TextStyle(color: Colors.black87),
@@ -270,6 +300,31 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
                               backgroundColor: Color(0xFF2563EB),
                               foregroundColor: Colors.white,
                               side: const BorderSide(color: Colors.blue, width: 1.0),
+                            ),
+                          ),
+                          SizedBox(height: 20.0,),
+                          Center(
+                            child: Text.rich(
+                              TextSpan(
+                                text: "Already have an account? ",
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: 'Sign In',
+                                    style: TextStyle(color: Color(0xFF2563EB), fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context){
+                                                return SignInPage();
+                                              },
+                                            )
+                                        );
+                                      },
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],

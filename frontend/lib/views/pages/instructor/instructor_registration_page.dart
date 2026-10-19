@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hourglass/services/instructor_service.dart';
 import 'package:hourglass/views/pages/sign_in_page.dart';
@@ -93,7 +93,7 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const SizedBox(height: 20.0),
+                      const SizedBox(height: 0.0),
                       TextFormField(
                         controller: firstNameController,
                         style: const TextStyle(color: Colors.white),
@@ -274,6 +274,34 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
                           backgroundColor: Colors.white,
                           foregroundColor: Color(0xFF2563EB),
                           side: const BorderSide(color: Colors.blue, width: 1.0),
+                        ),
+                      ),
+                      SizedBox(height: 10.0,),
+                      Center(
+                        child: Text.rich(
+                          TextSpan(
+                            text: "Already have an account? ",
+                            style: TextStyle(
+                              color: Colors.white
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Sign In',
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context){
+                                            return SignInPage();
+                                          },
+                                        )
+                                    );
+                                  },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
