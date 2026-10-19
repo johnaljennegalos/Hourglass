@@ -30,7 +30,7 @@ class RoleSelectionPage extends StatelessWidget {
                 SizedBox(height: 30.0),
                 OutlinedButton.icon(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) {
@@ -54,7 +54,7 @@ class RoleSelectionPage extends StatelessWidget {
                 SizedBox(height: 20.0),
                 OutlinedButton.icon(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) {

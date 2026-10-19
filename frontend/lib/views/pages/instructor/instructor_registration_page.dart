@@ -221,11 +221,12 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
                                 await Future.delayed(const Duration(seconds: 4));
 
                                 // TODO: Navigate to login screen or home page
-                                Navigator.pushReplacement(
+                                Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => SignInPage(),
                                   ),
+                                  (route) => route.isFirst,
                                 );
                               } else if (response.statusCode == 400) {
                                 if (!mounted) return;
@@ -290,13 +291,14 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
                                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    Navigator.pushReplacement(
+                                    Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context){
                                             return SignInPage();
                                           },
-                                        )
+                                        ),
+                                        (route) => route.isFirst,
                                     );
                                   },
                               ),
