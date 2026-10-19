@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/views/widgets/signin_wave_clipper.dart';
 import 'package:flutter/gestures.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
@@ -248,7 +250,29 @@ class SignInPage extends StatelessWidget {
                   ),
                 ],
               )
-            )
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  // TODO
+                },
+                icon: const FaIcon(
+                  FontAwesomeIcons.google,
+                  color: Color(0xFF2563EB),
+                  size: 20.0,
+                ),
+                label: Text('Sign in with Google'),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50.0),
+                  foregroundColor: Colors.black87,
+                  side: const BorderSide(color: Colors.grey, width: 1.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
