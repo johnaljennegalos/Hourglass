@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hourglass/services/student_service.dart';
+import 'package:hourglass/views/pages/role_selection_page.dart';
+import 'package:hourglass/views/pages/sign_in_page.dart';
 
 
 class StudentRegistrationPage extends StatefulWidget {
@@ -195,15 +197,22 @@ class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
 
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text('Registration successful!'),
+                                        content: Text('Registration successful! Redirecting to Sign In...'),
                                         backgroundColor: Colors.green,
                                       )
                                     );
 
                                     FocusScope.of(context).unfocus();
 
+                                    await Future.delayed(const Duration(seconds: 4));
+
                                     // TODO: Navigate to login screen or home page
-                                    // Navigator.pushReplacement(...);
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SignInPage(),
+                                      ),
+                                    );
                                   } else if (response.statusCode == 400) {
                                     if (!mounted) return;
 
