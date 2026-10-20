@@ -3,6 +3,9 @@ import 'package:hourglass/views/widgets/signin_wave_clipper.dart';
 import 'package:flutter/gestures.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hourglass/views/pages/role_selection_page.dart';
+import 'package:hourglass/services/auth_service.dart';
+import 'package:hourglass/views/pages/student/student_dashboard.dart';
+import 'package:hourglass/views/pages/instructor/instructor_dashboard.dart';
 
 
 class SignInPage extends StatefulWidget {
@@ -13,8 +16,18 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   bool isChecked = false;
   bool _obscureText = true;
+
+  @override
+  void dispose () {
+   usernameController.dispose();
+   passwordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +82,12 @@ class _SignInPageState extends State<SignInPage> {
                     maxWidth: 400,
                   ),
                   child: Form(
+                    key: _formKey,
                     child: Column(
                       children: [
                         SizedBox(height: 0.0),
                         TextFormField(
-                          // controller: firstNameController,
+                          controller: usernameController,
                           style: const TextStyle(color: Colors.black87),
                           cursorColor: Colors.black,
                           decoration: const InputDecoration(
@@ -92,7 +106,10 @@ class _SignInPageState extends State<SignInPage> {
                         SizedBox(height: 20.0),
                         TextFormField(
                           obscureText: _obscureText,
-                          // controller: firstNameController,
+                          controller: passwordController,
+                          autocorrect: false,
+                          enableSuggestions: false,
+                          textCapitalization: TextCapitalization.none,
                           style: const TextStyle(color: Colors.black87),
                           cursorColor: Colors.black,
                           decoration: InputDecoration(
@@ -105,7 +122,7 @@ class _SignInPageState extends State<SignInPage> {
                                 _obscureText ? Icons.visibility : Icons.visibility_off,
                                 color: Color(0xFF2563EB),
                               ),
-                              onPressed: (){
+                              onPressed: () {
                                 setState(() {
                                   _obscureText = !_obscureText;
                                 });
@@ -158,86 +175,80 @@ class _SignInPageState extends State<SignInPage> {
                         SizedBox(height: 10.0),
                         OutlinedButton.icon(
                           onPressed: () async {
-                          //   if (_formKey.currentState!.validate()){
-                          //
-                          //     try{
-                          //
-                          //       final response = await StudentService.registerStudent(
-                          //         firstNameController.text.trim(),
-                          //         lastNameController.text.trim(),
-                          //         usernameController.text.trim(),
-                          //         emailController.text.trim(),
-                          //         passwordController.text.trim(),
-                          //       );
-                          //
-                          //       if (response.statusCode == 201 || response.statusCode == 200) {
-                          //         if (!mounted) return;
-                          //
-                          //         setState(() {
-                          //           firstNameController.clear();
-                          //           lastNameController.clear();
-                          //           usernameController.clear();
-                          //           emailController.clear();
-                          //           passwordController.clear();
-                          //         });
-                          //
-                          //         ScaffoldMessenger.of(context).showSnackBar(
-                          //             const SnackBar(
-                          //               content: Text('Registration successful!'),
-                          //               backgroundColor: Colors.green,
-                          //             )
-                          //         );
-                          //
-                          //         FocusScope.of(context).unfocus();
-                          //
-                          //         TODO: Navigate to login screen or home page
-                          //         // Navigator.pushReplacement(...);
-                          //       } else if (response.statusCode == 400) {
-                          //         if (!mounted) return;
-                          //
-                          //         final Map<String, dynamic> errors = jsonDecode(response.body);
-                          //         final String firstError = errors.values.first[0].toString();
-                          //
-                          //         ScaffoldMessenger.of(context).showSnackBar(
-                          //           SnackBar(
-                          //             content: Text('Registration failes $firstError'),
-                          //             backgroundColor: Colors.red,
-                          //           ),
-                          //         );
-                          //       } else {
-                          //         if (!mounted) return;
-                          //
-                          //         ScaffoldMessenger.of(context).showSnackBar(
-                          //           SnackBar(
-                          //             content: Text('Server error [${response.statusCode}]. Please try again.'),
-                          //             backgroundColor: Colors.red,
-                          //           ),
-                          //         );
-                          //       }
-                          //
-                          //     } catch (e) {
-                          //       if (!mounted) return;
-                          //
-                          //       ScaffoldMessenger.of(context).showSnackBar(
-                          //         SnackBar(
-                          //           content: Text('Network error: $e'),
-                          //           backgroundColor: Colors.red,
-                          //         ),
-                          //       );
-                          //     }
-                          //
-                          //   }
-                          //
-                          //
-                          //
-                          //   // Navigator.push(
-                          //   //   context,
-                          //   //   MaterialPageRoute(
-                          //   //     builder: (context) {
-                          //   //       return ();
-                          //   //     },
-                          //   //   ),
-                          //   // );
+                            if (_formKey.currentState!.validate()){
+
+                              try{
+
+                                final role = await AuthService.signInUser(
+                                  usernameController.text.trim(),
+                                  passwordController.text.trim(),
+                                );
+
+                                final isSuccess = role != null;
+
+                                if (!mounted) return;
+
+                                if (isSuccess) {
+
+                                  FocusScope.of(context).unfocus();
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Sign In successful!'),
+                                        backgroundColor: Colors.green,
+                                      )
+                                  );
+
+                                  if (role == 'ST') {
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const StudentDashboard()),
+                                          (route) => route.isFirst,
+                                    );
+                                  }
+
+                                  if (role == 'IN') {
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const InstructorDashboard()),
+                                          (route) => route.isFirst,
+                                    );
+                                  }
+
+                                } else  {
+                                  if (!mounted) return;
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Sign in failed. Invalid username or password.'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+
+                              } catch (e) {
+                                if (!mounted) return;
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Network error: $e'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+
+                            }
+
+
+
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) {
+                            //       return ();
+                            //     },
+                            //   ),
+                            // );
                           },
                           icon: const Icon(Icons.login, size: 22.0),
                           label: const Text('Sign In'),

@@ -8,10 +8,10 @@ class AuthService {
   static String? get accessToken => _accessToken;
   static const _storage = FlutterSecureStorage();
 
-  static Future<bool> loginUser(String username, String password) async {
+  static Future<String?> signInUser(String username, String password) async {
     try{
       final response = await ApiService.post(
-        '/token/',
+        '/auth/sign_in/',
         body: {
           'username' : username,
           'password' : password
@@ -23,20 +23,21 @@ class AuthService {
 
         await _storage.write(key: 'jwt_access', value: responseData['access']);
         await _storage.write(key: 'jwt_refresh', value: responseData['refresh']);
+        await _storage.write(key: 'role', value: responseData['role']);
 
         _accessToken = responseData['access'];
 
         print('Token successfully extracted: $_accessToken');
-        return true;
+        return responseData['role'] as String?;
 
       } else {
         final Map<String, dynamic> errorData = jsonDecode(response.body);
-        print('Login failed [${response.statusCode}]: ${errorData['detail'] ?? response.body}');
-        return false;
+        print('Sign In failed [${response.statusCode}]: ${errorData['detail'] ?? response.body}');
+        return null;
       }
     } catch (e) {
       print('An error occurred: $e');
-      return false;
+      return null;
     }
   }
 
