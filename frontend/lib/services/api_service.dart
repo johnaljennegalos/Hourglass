@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService{
-  static const String baseUrl = 'http://192.168.1.14:8000/api';
+  static const String baseUrl = 'http://192.168.1.3:8000/api';
 
   static Future<http.Response> post(
       String endpoint,

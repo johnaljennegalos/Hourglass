@@ -1,7 +1,8 @@
 import 'dart:convert';
-
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hourglass/services/instructor_service.dart';
+import 'package:hourglass/views/pages/sign_in_page.dart';
 
 class InstructorRegistrationPage extends StatefulWidget {
   const InstructorRegistrationPage({super.key});
@@ -92,7 +93,7 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const SizedBox(height: 20.0),
+                      const SizedBox(height: 0.0),
                       TextFormField(
                         controller: firstNameController,
                         style: const TextStyle(color: Colors.white),
@@ -210,15 +211,23 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
 
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                      content: Text('Registration successful!'),
+                                      content: Text('Registration successful! Redirecting to Sign In...'),
                                       backgroundColor: Colors.green,
                                     )
                                 );
 
                                 FocusScope.of(context).unfocus();
 
+                                await Future.delayed(const Duration(seconds: 4));
+
                                 // TODO: Navigate to login screen or home page
-                                // Navigator.pushReplacement(...);
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SignInPage(),
+                                  ),
+                                  (route) => route.isFirst,
+                                );
                               } else if (response.statusCode == 400) {
                                 if (!mounted) return;
 
@@ -255,16 +264,6 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
 
                           }
 
-
-
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) {
-                          //       return ();
-                          //     },
-                          //   ),
-                          // );
                         },
                         icon: const Icon(Icons.app_registration, size: 22.0),
                         label: const Text('Register'),
@@ -276,6 +275,35 @@ class _InstructorRegistrationPageState extends State<InstructorRegistrationPage>
                           backgroundColor: Colors.white,
                           foregroundColor: Color(0xFF2563EB),
                           side: const BorderSide(color: Colors.blue, width: 1.0),
+                        ),
+                      ),
+                      SizedBox(height: 10.0,),
+                      Center(
+                        child: Text.rich(
+                          TextSpan(
+                            text: "Already have an account? ",
+                            style: TextStyle(
+                              color: Colors.white
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Sign In',
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context){
+                                            return SignInPage();
+                                          },
+                                        ),
+                                        (route) => route.isFirst,
+                                    );
+                                  },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],

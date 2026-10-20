@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import StudentLoginView, StudentRegisterView, InstructorLoginView, InstructorRegisterView, InstructorListView, InstructorDetailView, ConsultationSlotListCreateView, ConsultationSlotDetailView, AvailableSlotListView, ConsultationBookingListCreateView, ConsultationBookingCancelView, StudentBookingHistoryView, InstructorRosterView, AttendanceUpdateView, StudentProfileMetricView, InstructorSlotListCreateView, InstructorSlotDetailView, InstructorBookingListView, InstructorBookingDecisionView, InstructorBookingAttendanceView, InstructorAnalyticsView, InstructorProfileView
+from .views import StudentLoginView, StudentRegisterView, InstructorLoginView, InstructorRegisterView, InstructorListView, InstructorDetailView, ConsultationSlotListCreateView, ConsultationSlotDetailView, AvailableSlotListView, ConsultationBookingListCreateView, ConsultationBookingCancelView, StudentBookingHistoryView, InstructorRosterView, AttendanceUpdateView, StudentProfileMetricView, InstructorSlotListCreateView, InstructorSlotDetailView, InstructorBookingListView, InstructorBookingDecisionView, InstructorBookingAttendanceView, InstructorAnalyticsView, InstructorProfileView, SignInView
 
 urlpatterns = [
+    path('auth/sign_in/', SignInView.as_view(), name='sign-in'),
     path('student/login/', StudentLoginView.as_view(), name='student-login',),
     path('student/register/', StudentRegisterView.as_view(), name='student-register'),
     path('instructor/login/', InstructorLoginView.as_view(), name='instructor-login'),

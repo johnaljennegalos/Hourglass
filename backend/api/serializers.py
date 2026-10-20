@@ -526,6 +526,37 @@ class ChangePasswordSerializer(serializers.Serializer):
         user.save()
         return user
 
+
+class SignInSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True, write_only=True)
+    password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, attrs):
+        username = attrs.get('username')
+        password = attrs.get('password')
+
+        if not username or not password:
+            raise serializers.ValidationError({'error' : 'Must include both username and password.'})
+
+        user = authenticate(
+            request=self.context.get('request'),
+            username=username,
+            password=password
+        )
+
+        if not user:
+            raise serializers.ValidationError({'error' : 'Unable to login with provided credentials.'})
+
+        if not user.is_active:
+            raise serializers.ValidationError({'error' : 'User account is disabled.'})
+
+        if getattr(user, 'role', None) not in ['ST', 'IN']:
+            raise serializers.ValidationError({'error' : 'User is unauthorized.'})
+
+        attrs['user'] = user
+        return attrs
+
+
 class StudentLoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True, write_only=True)
     password = serializers.CharField(required=True, write_only=True)

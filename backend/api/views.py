@@ -15,10 +15,31 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 
 
-from .serializers import StudentLoginSerializer, StudentRegistrationSerializer, InstructorLoginSerializer, InstructorRegistrationSerializer, InstructorPublicProfileSerializer, ConsultationSlotSerializer, ConsultationBookingSerializer, ConsultationSlotDetailSerializer, StudentBookingHistorySerializer, InstructorRosterSerializer, AttendanceUpdateSerializer, StudentProfileMetricsSerializer, InstructorBookingDetailSerializer, InstructorBookingDecisionSerializer, InstructorAttendanceSerializer, InstructorAnalyticsSerializer, InstructorSelfProfileSerializer
+from .serializers import StudentLoginSerializer, StudentRegistrationSerializer, InstructorLoginSerializer, InstructorRegistrationSerializer, InstructorPublicProfileSerializer, ConsultationSlotSerializer, ConsultationBookingSerializer, ConsultationSlotDetailSerializer, StudentBookingHistorySerializer, InstructorRosterSerializer, AttendanceUpdateSerializer, StudentProfileMetricsSerializer, InstructorBookingDetailSerializer, InstructorBookingDecisionSerializer, InstructorAttendanceSerializer, InstructorAnalyticsSerializer, InstructorSelfProfileSerializer, SignInSerializer
 
 from .permissions import IsStudent, IsInstructor
 from .models import User, ConsultationSlot, ConsultationBooking
+
+
+class SignInView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = SignInSerializer(data=request.data, context={'request' : request})
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        user = serializer.validated_data['user']
+        refresh = RefreshToken.for_user(user)
+
+        return Response({
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+            'role': user.role,
+            'user_id': user.id,
+            'username': user.username,
+        }, status=status.HTTP_200_OK)
 
 
 class StudentLoginView(APIView):
