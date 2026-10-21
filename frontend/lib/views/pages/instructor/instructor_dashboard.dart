@@ -11,12 +11,20 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
 
   int _selectedIndex = 0;
 
+  final List<Widget> _pages = [
+    const Center(child: Text('Bookings Page')),
+    const Center(child: Text('Slots Page')),
+    const Center(child: Text('Notifs Page')),
+    const Center(child: Text('Profile Page')),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Instructor'),
       ),
+      body: _pages[_selectedIndex],
       bottomNavigationBar: NavigationBar(
         backgroundColor: Color(0xFF2563EB),
         indicatorColor: Colors.white24,
@@ -43,6 +51,11 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
         ),
         destinations: const <Widget>[
           NavigationDestination(
+            icon: Icon(Icons.notifications_none, color: Colors.white70),
+            selectedIcon: Icon(Icons.notifications, color: Colors.white),
+            label: 'Notifs',
+          ),
+          NavigationDestination(
             icon: Icon(Icons.calendar_today_outlined, color: Colors.white70),
             selectedIcon: Icon(Icons.calendar_today, color: Colors.white),
             label: 'Bookings',
@@ -51,11 +64,6 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
             icon: Icon(Icons.add_circle_outline, color: Colors.white70),
             selectedIcon: Icon(Icons.add_circle, color: Colors.white),
             label: 'Slots',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.notifications_none, color: Colors.white70),
-            selectedIcon: Icon(Icons.notifications, color: Colors.white),
-            label: 'Notifs',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline, color: Colors.white70),
