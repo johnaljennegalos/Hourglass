@@ -22,7 +22,9 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Instructor'),
+        backgroundColor: Color(0xFF3B82F6),
+        title: Text('HOURGLASS', style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white70),),
+        centerTitle: true,
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: NavigationBar(
