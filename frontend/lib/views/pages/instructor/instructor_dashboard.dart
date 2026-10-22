@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hourglass/views/pages/instructor/instructor_slot.dart';
 
 class InstructorDashboard extends StatefulWidget {
   const InstructorDashboard({super.key});
@@ -12,9 +13,9 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    const Center(child: Text('Bookings Page')),
-    const Center(child: Text('Slots Page')),
     const Center(child: Text('Notifs Page')),
+    const Center(child: Text('Bookings Page')),
+    const Center(child: InstructorSlot()),
     const Center(child: Text('Profile Page')),
   ];
 
