@@ -203,7 +203,7 @@ class _SignInPageState extends State<SignInPage> {
                                     Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(builder: (context) => const StudentDashboard()),
-                                          (route) => route.isFirst,
+                                          (route) => false,
                                     );
                                   }
 
@@ -211,7 +211,7 @@ class _SignInPageState extends State<SignInPage> {
                                     Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(builder: (context) => const InstructorDashboard()),
-                                          (route) => route.isFirst,
+                                          (route) => false,
                                     );
                                   }
 
