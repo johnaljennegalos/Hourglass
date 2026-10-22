@@ -11,6 +11,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.utils import timezone
 from rest_framework.validators import UniqueTogetherValidator
 from datetime import datetime
+from datetime import timedelta
 
 
 class UserGeneralSerializer(serializers.ModelSerializer):
@@ -131,6 +132,15 @@ class InstructorRegistrationSerializer(serializers.ModelSerializer):
 # The instructor is injected automatically in ViewSet when calling .perform_create(serializer).
 #instructor form post/put/patch
 class ConsultationSlotSerializer(serializers.ModelSerializer):
+    repeat_weeks = serializers.IntegerField(
+        write_only=True,
+        required=False,
+        default=1,
+        min_value=1,
+        max_value=20,
+        help_text="Number of consecutive weeks to repeat this slot."
+    )
+
     class Meta:
         model = ConsultationSlot
         fields = [
@@ -141,6 +151,7 @@ class ConsultationSlotSerializer(serializers.ModelSerializer):
             'max_capacity',
             'location',
             'date',
+            'repeat_weeks'
         ]
 
         extra_kwargs = {
@@ -151,6 +162,7 @@ class ConsultationSlotSerializer(serializers.ModelSerializer):
         start = attrs.get('start_time', getattr(self.instance, 'start_time', None))
         end = attrs.get('end_time', getattr(self.instance, 'end_time', None))
         date_val = attrs.get('date', getattr(self.instance, 'date', None))
+        repeat_weeks = attrs.get('repeat_weeks', 1)
         now = timezone.localtime(timezone.now())
 
         if date_val < now.date():
@@ -165,23 +177,44 @@ class ConsultationSlotSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         teacher = request.user if request else None
 
-        overlapping_slot = ConsultationSlot.objects.filter(
-            teacher=teacher,
-            date=date_val,
-            is_deleted=False,
-            start_time__lt=end,
-            end_time__gt=start
-        )
+        for week in range(repeat_weeks):
+            target_date = date_val + timedelta(weeks=week)
 
-        if self.instance is not None:
-            overlapping_slot = overlapping_slot.exclude(pk=self.instance.pk)
+            overlapping_slot = ConsultationSlot.objects.filter(
+                teacher=teacher,
+                date=target_date,
+                is_deleted=False,
+                start_time__lt=end,
+                end_time__gt=start
+            )
 
-        if overlapping_slot.exists():
-            raise serializers.ValidationError({
-                "non_field_errors": ["You already have an overlapping consultation slot for this time range."]
-            })
+            if self.instance is not None:
+                overlapping_slot = overlapping_slot.exclude(pk=self.instance.pk)
+
+            if overlapping_slot.exists():
+                raise serializers.ValidationError({
+                    "non_field_errors": ["You already have an overlapping consultation slot for this time range."]
+                })
 
         return attrs
+
+    def create(self, validated_data):
+        repeat_weeks = validated_data.pop['repeat_weeks', 1]
+        base_date = validated_data.get('date')
+
+        validated_data['teacher'] = self.context['request'].user
+
+        created_slots = []
+
+        for week in range(repeat_weeks):
+            slot_date = base_date + timedelta(weeks=week)
+            slot = ConsultationSlot.objects.create(
+                **validated_data,
+                date=slot_date
+            )
+            created_slots.append(slot)
+
+        return created_slots[0]
 
 
 class ConsultationBookingSerializer(serializers.ModelSerializer):
