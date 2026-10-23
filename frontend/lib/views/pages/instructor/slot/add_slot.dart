@@ -13,6 +13,8 @@ class _AddSlotState extends State<AddSlot> {
   DateTime _dateTime = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
   int _maxCapacity = 1;
+  bool repeatEnabled = false;
+  int repeatWeeks = 2;
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -235,6 +237,110 @@ class _AddSlotState extends State<AddSlot> {
                     )
                   ],
                 ),
+                Divider(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Repeat Weekly',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text('Create additional slots on the same weekday for consecutive weeks', style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey,)
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Repeat this slot',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text('Create additional slots weekly', style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey,
+                              ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Switch(
+                          value: repeatEnabled,
+                          activeColor: Color(0xFF2563EB),
+                          onChanged: (value) {
+                            setState(() {
+                              repeatEnabled = value;
+                            });
+                          },
+                        ),
+                      ]
+                    ),
+                    if (repeatEnabled) ...[
+                      const SizedBox(height: 8),
+
+                      Row(
+                        children: [
+                          const Text(
+                            'Number of weeks',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          ),
+
+                          const Spacer(),
+
+                          IconButton(
+                            color: Colors.redAccent,
+                            onPressed: repeatWeeks > 2
+                                ? () {
+                              setState(() {
+                                repeatWeeks--;
+                              });
+                            }
+                                : null,
+                            icon: const Icon(Icons.remove),
+                          ),
+
+                          Text(
+                            '$repeatWeeks',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          IconButton(
+                            color: Color(0xFF2563EB),
+                            onPressed: repeatWeeks < 20
+                                ? () {
+                              setState(() {
+                                repeatWeeks++;
+                              });
+                            }
+                                : null,
+                            icon: const Icon(Icons.add),
+                          ),
+                        ],
+                      ),
+                      Text('$repeatWeeks dated slots will be created, one week apart.')
+                    ]
+                  ],
+                )
               ],
             )
           ],
