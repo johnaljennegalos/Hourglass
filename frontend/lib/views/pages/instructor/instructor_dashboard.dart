@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/instructor/instructor_slot.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
+
 
 class InstructorDashboard extends StatefulWidget {
   const InstructorDashboard({super.key});
@@ -17,6 +20,7 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
     const Center(child: Text('Bookings Page')),
     const Center(child: InstructorSlot()),
     const Center(child: Text('Profile Page')),
+    const Center(child: Text('Settings Page')),
   ];
 
   @override
@@ -28,53 +32,39 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
         centerTitle: true,
       ),
       body: _pages[_selectedIndex],
-      bottomNavigationBar: NavigationBar(
-        backgroundColor: Color(0xFF2563EB),
-        indicatorColor: Colors.white24,
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (int index) {
+
+      bottomNavigationBar: CurvedNavigationBar(
+        index: _selectedIndex,
+        color: const Color(0xFF2563EB),
+        buttonBackgroundColor: const Color(0xFF1E40AF),
+        backgroundColor: Colors.transparent,
+        items: const <CurvedNavigationBarItem>[
+            CurvedNavigationBarItem(
+              child: Icon(Icons.notifications, size: 30, color: Colors.white),
+              label: 'Notifs',
+              labelStyle: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+            CurvedNavigationBarItem(
+              child: Icon(Icons.calendar_today, size: 30, color: Colors.white),
+              label: 'Bookings',
+              labelStyle: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+            CurvedNavigationBarItem(
+              child: Icon(Icons.add_circle, size: 30, color: Colors.white),
+              label: 'Slots',
+              labelStyle: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+            CurvedNavigationBarItem(
+              child: Icon(Icons.person, size: 30, color: Colors.white),
+              label: 'Profile',
+              labelStyle: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+      ],
+        onTap: (index) {
           setState(() {
             _selectedIndex = index;
           });
-        },
-        labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
-              (states) {
-            if (states.contains(WidgetState.selected)) {
-              return const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              );
-            }
-            return const TextStyle(
-              color: Colors.white70,
-              fontSize: 12,
-            );
-          },
-        ),
-        destinations: const <Widget>[
-          NavigationDestination(
-            icon: Icon(Icons.notifications_none, color: Colors.white70),
-            selectedIcon: Icon(Icons.notifications, color: Colors.white),
-            label: 'Notifs',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.calendar_today_outlined, color: Colors.white70),
-            selectedIcon: Icon(Icons.calendar_today, color: Colors.white),
-            label: 'Bookings',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.add_circle_outline, color: Colors.white70),
-            selectedIcon: Icon(Icons.add_circle, color: Colors.white),
-            label: 'Slots',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline, color: Colors.white70),
-            selectedIcon: Icon(Icons.person, color: Colors.white),
-            label: 'Profile',
-          ),
-        ],
-      ),
+        },),
     );
   }
 }
