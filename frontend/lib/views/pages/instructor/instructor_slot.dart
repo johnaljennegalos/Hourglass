@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hourglass/views/pages/instructor/slot/add_slot.dart';
 
 
 
@@ -15,20 +16,46 @@ class _InstructorSlotState extends State<InstructorSlot> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                  'My Consultation Slots',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('My Slots',
+                        style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black
+                          ),
+                        ),
+                        Text('Manage your consultation availability')
+                      ],
+                    )
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context){
+                              return AddSlot();
+                            },
+                          )
+                      );
+                    },
+                    icon: Icon(Icons.add),
+                    style: IconButton.styleFrom(
+                      backgroundColor: Color(0xFF2563EB),
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 8.0,),
-              Text('Manage your recurring availability for student consultations.'),
               Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: const BoxDecoration(
