@@ -97,4 +97,33 @@ class InstructorService {
 
   }
 
+  static Future<bool> createConsultationSlot(Map<String, dynamic> slotData) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot create slot: User is not authenticated.');
+      return false;
+    }
+
+    try{
+
+      final response = await ApiService.post(
+        '/instructor/slots/',
+        body: slotData,
+        token: authToken
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return true;
+      } else {
+        print('Failed [${response.statusCode}]: ${response.body}');
+        return false;
+      }
+
+    } catch (e) {
+      print('An error occurred while creating consultation slot: $e');
+      return false;
+    }
+  }
+
 }

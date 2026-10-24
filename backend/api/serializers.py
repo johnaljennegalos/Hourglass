@@ -199,8 +199,8 @@ class ConsultationSlotSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        repeat_weeks = validated_data.pop['repeat_weeks', 1]
-        base_date = validated_data.get('date')
+        repeat_weeks = validated_data.pop('repeat_weeks', 1)
+        base_date = validated_data.pop('date')
 
         validated_data['teacher'] = self.context['request'].user
 
