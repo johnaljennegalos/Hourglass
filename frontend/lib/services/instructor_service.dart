@@ -126,4 +126,38 @@ class InstructorService {
     }
   }
 
+  static Future<List<dynamic>> getSlots() async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot fetch profile: User is not authenticated.');
+      return [];
+    }
+
+    try{
+
+      final response = await ApiService.get(
+        '/instructor/me/slots/',
+        token: authToken
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> slotListData = jsonDecode(response.body);
+        return slotListData;
+      } else if (response.statusCode == 401 || response.statusCode == 403) {
+        print('Unauthorized: Access token expired or invalid.');
+        return [];
+      } else {
+        print(response.statusCode);
+        return [];
+      }
+
+    } catch (e) {
+      print('An error occurred while fetching consultation slot: $e');
+      return [];
+    }
+
+
+  }
+
 }

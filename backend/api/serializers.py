@@ -141,6 +141,8 @@ class ConsultationSlotSerializer(serializers.ModelSerializer):
         help_text="Number of consecutive weeks to repeat this slot."
     )
 
+    booked_count = serializers.SerializerMethodField()
+
     class Meta:
         model = ConsultationSlot
         fields = [
@@ -151,12 +153,16 @@ class ConsultationSlotSerializer(serializers.ModelSerializer):
             'max_capacity',
             'location',
             'date',
-            'repeat_weeks'
+            'repeat_weeks',
+            'booked_count'
         ]
 
         extra_kwargs = {
             'teacher' : {'read_only' : True}
         }
+
+    def get_booked_count(self, obj):
+        return obj.bookings.filter(status__in=['PENDING', 'CONFIRMED']).count()
 
     def validate(self, attrs):
         start = attrs.get('start_time', getattr(self.instance, 'start_time', None))

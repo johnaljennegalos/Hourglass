@@ -450,6 +450,25 @@ class _AddSlotState extends State<AddSlot> {
                         if (_formKey.currentState!.validate()){
 
                           try{
+                            final DateTime now = DateTime.now();
+                            final DateTime today = DateTime(now.year, now.month, now.day);
+                            final DateTime selectedDate = DateTime(_dateTime.year, _dateTime.month, _dateTime.day);
+
+                            if (selectedDate.isBefore(today)) {
+                              _slotMessengerKey.currentState
+                                ?..hideCurrentSnackBar()
+                                ..showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Cannot create consultation slots for past dates.',
+                                    ),
+                                    backgroundColor: Colors.redAccent,
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              return;
+                            }
+
                             if (_startTime == null || _endTime == null) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -506,7 +525,7 @@ class _AddSlotState extends State<AddSlot> {
                                   ),
                                 );
 
-                              // Navigator.pop(context, true);
+                              Navigator.pop(context, true);
                             } else  {
                               if (!mounted) return;
 
