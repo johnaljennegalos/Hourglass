@@ -13,6 +13,39 @@ class InstructorSlot extends StatefulWidget {
 
 class _InstructorSlotState extends State<InstructorSlot> {
 
+  Widget _buildSlotList(){
+    if (_slots.isEmpty){
+      return const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.event_busy, color: Colors.blue),
+            SizedBox(width: 8.0),
+            Text(
+              'No consultation slots available',
+              style: TextStyle(fontSize: 16.0),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: _slots.map((slot) {
+        return Card(
+          margin: const EdgeInsets.only(bottom: 12.0),
+          child: ListTile(
+            leading: const Icon(Icons.calendar_today),
+            title: Text('${slot['date']} (${slot['start_time']} - ${slot['end_time']})'),
+            subtitle: Text('Location: ${slot['location']} • Capacity: ${slot['booked_count'] ?? 0}/${slot['max_capacity']}'),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
   List<dynamic> _slots = [];
   bool _isLoading = true;
 
@@ -27,7 +60,7 @@ class _InstructorSlotState extends State<InstructorSlot> {
 
     final slotsData = await InstructorService.getSlots();
 
-    print('DEBUG SLOTS RESPONSE: $slotsData');
+    // print('DEBUG SLOTS RESPONSE: $slotsData');
 
     if (mounted) {
       setState(() {
@@ -219,6 +252,19 @@ class _InstructorSlotState extends State<InstructorSlot> {
                   ),
                 ],
               ),
+              //display for the list
+              const Text(
+                'Active Consultation Slots',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 12.0),
+
+              // Call your helper method here
+              _buildSlotList(),
             ],
           ),
         ),
