@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/instructor/slot/add_slot.dart';
 import 'package:hourglass/services/instructor_service.dart';
+import 'package:intl/intl.dart';
 
 
 
@@ -34,12 +35,89 @@ class _InstructorSlotState extends State<InstructorSlot> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: _slots.map((slot) {
+
+        final DateTime parsedDate = DateTime.parse(slot['date']);
+        final String formattedDate = DateFormat('EEEE, MMMM d, yyyy').format(parsedDate);
+        final DateTime parsedStartTime = DateTime.parse('2000-01-01 ' + slot['start_time']);
+        final String formattedStartTime = DateFormat('h:mm a').format(parsedStartTime);
+        final DateTime parsedEndTime = DateTime.parse('2000-01-01 ' + slot['end_time']);
+        final String formattedEndTime = DateFormat('h:mm a').format(parsedEndTime);
+
+
         return Card(
           margin: const EdgeInsets.only(bottom: 12.0),
-          child: ListTile(
-            leading: const Icon(Icons.calendar_today),
-            title: Text('${slot['date']} (${slot['start_time']} - ${slot['end_time']})'),
-            subtitle: Text('Location: ${slot['location']} • Capacity: ${slot['booked_count'] ?? 0}/${slot['max_capacity']}'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+            side: const BorderSide(color: Colors.black12),
+          ),
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFDBEAFE),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: const Icon(
+                        Icons.calendar_today,
+                        color: Color(0xFF2563EB),
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(width: 12.0),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('$formattedDate', style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600
+                          ),),
+                          Text('${formattedStartTime} - ${formattedEndTime}', style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600]
+                          ),),
+                          Text('Location: ${slot['location']}', style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[700]
+                          ),),
+                          Text('Capacity: ${slot['max_capacity']}', style: TextStyle(
+                            fontSize: 14,
+                              color: Colors.grey[700]
+                          ),),
+                        ],
+                      ),
+                    ),
+                    MenuAnchor(
+                      builder: (context, controller, child) {
+                        return IconButton(
+                          icon: const Icon(Icons.more_vert),
+                          onPressed: () {
+                            controller.isOpen ? controller.close() : controller.open();
+                          },
+                        );
+                      },
+                      menuChildren: [
+                        MenuItemButton(
+                          leadingIcon: const Icon(Icons.visibility_outlined),
+                          onPressed: () {
+                            // Open slot details
+                          },
+                          child: const Text('View Details'),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       }).toList(),
@@ -262,8 +340,6 @@ class _InstructorSlotState extends State<InstructorSlot> {
               ),
 
               const SizedBox(height: 12.0),
-
-              // Call your helper method here
               _buildSlotList(),
             ],
           ),
