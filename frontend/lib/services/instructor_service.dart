@@ -160,4 +160,37 @@ class InstructorService {
 
   }
 
+
+  static Future<bool> updateConsultationSlot(int slotId, Map<String, dynamic> data) async {
+
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot update slot: User is not authenticated.');
+      return false;
+    }
+
+    try{
+      
+      final response = await ApiService.patch(
+        '/instructor/slots/$slotId/',
+        token: authToken,
+        body: data
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return true;
+      } else {
+        print('Failed to update slot (${response.statusCode}): ${response.body}');
+        return false;
+      }
+      
+    } catch (e) {
+
+      print('Error updating consultation slot: $e');
+      return false;
+    }
+    
+  }
+
 }

@@ -5,7 +5,9 @@ import 'package:hourglass/services/instructor_service.dart';
 import 'package:hourglass/services/auth_service.dart';
 
 class AddSlot extends StatefulWidget {
-  const AddSlot({super.key});
+  const AddSlot({super.key, this.slot});
+
+  final Map<String, dynamic>? slot;
 
   @override
   State<AddSlot> createState() => _AddSlotState();
@@ -17,6 +19,10 @@ class _AddSlotState extends State<AddSlot> {
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _capacityController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _startTimeController = TextEditingController();
+  final TextEditingController _endTimeController = TextEditingController();
 
   DateTime _dateTime = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
@@ -95,6 +101,40 @@ class _AddSlotState extends State<AddSlot> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    if (widget.slot != null) {
+      final slotData = widget.slot!;
+
+      _locationController.text = slotData['location']?.toString() ?? '';
+      _maxCapacity = (slotData['max_capacity'] as int?) ?? 1;
+
+      if (slotData['date'] != null) {
+        _dateTime = DateTime.parse(slotData['date'].toString());
+      }
+
+      TimeOfDay? parseTimeString(String? timeStr) {
+        if (timeStr == null || timeStr.isEmpty) return null;
+        final parts = timeStr.split(':');
+        if (parts.length > 2) {
+          final hour = int.tryParse(parts[0]);
+          final minute = int.tryParse(parts[1]);
+          if (hour != null && minute != null) {
+            return TimeOfDay(hour: hour, minute: minute);
+          }
+        }
+        return null;
+      }
+
+      _startTime = parseTimeString(slotData['start_time']?.toString());
+      _endTime = parseTimeString(slotData['end_time']?.toString());
+
+    }
+
+  }
+
+  @override
   void dispose() {
     _locationController.dispose();
     super.dispose();
@@ -106,7 +146,7 @@ class _AddSlotState extends State<AddSlot> {
       key: _slotMessengerKey,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Add Consultation Slot'),
+          title: Text(widget.slot != null ? 'Edit Consultation Slot' : 'Add Consultation Slot'),
           iconTheme: const IconThemeData(color: Colors.black),
         ),
         body: SingleChildScrollView(
@@ -299,151 +339,153 @@ class _AddSlotState extends State<AddSlot> {
                         )
                       ],
                     ),
-                    Divider(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Repeat Weekly',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            Text('Create additional slots on the same weekday for consecutive weeks', style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey,)
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Repeat this slot',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  Text('Create additional slots weekly', style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.grey,
-                                  ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Switch(
-                              value: repeatEnabled,
-                              activeColor: Color(0xFF2563EB),
-                              onChanged: (value) {
-                                setState(() {
-                                  repeatEnabled = value;
-                                });
-                              },
-                            ),
-                          ]
-                        ),
-                        if (repeatEnabled) ...[
-                          const SizedBox(height: 8),
-
-                          Row(
+                    if (widget.slot == null) ...[
+                      Divider(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Number of weeks',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
-                              ),
-
-                              const Spacer(),
-
-                              IconButton(
-                                color: Colors.redAccent,
-                                onPressed: repeatWeeks > 2
-                                    ? () {
-                                  setState(() {
-                                    repeatWeeks--;
-                                  });
-                                }
-                                    : null,
-                                icon: const Icon(Icons.remove),
-                              ),
-
                               Text(
-                                '$repeatWeeks',
-                                style: const TextStyle(
-                                  fontSize: 16,
+                                'Repeat Weekly',
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 16,
                                 ),
                               ),
-
-                              IconButton(
-                                color: Color(0xFF2563EB),
-                                onPressed: repeatWeeks < 20
-                                    ? () {
-                                  setState(() {
-                                    repeatWeeks++;
-                                  });
-                                }
-                                    : null,
-                                icon: const Icon(Icons.add),
-                              ),
+                              Text('Create additional slots on the same weekday for consecutive weeks', style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey,)
+                              )
                             ],
                           ),
-                          Text('$repeatWeeks dated slots will be created, one week apart.'),
-                        ],
-                        if (repeatEnabled) ...[
-                          const SizedBox(height: 12),
-                          const Text(
-                            'Repeat preview',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14
-                            ),
+                          Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Repeat this slot',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      Text('Create additional slots weekly', style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey,
+                                      ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Switch(
+                                  value: repeatEnabled,
+                                  activeColor: Color(0xFF2563EB),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      repeatEnabled = value;
+                                    });
+                                  },
+                                ),
+                              ]
                           ),
-                          const SizedBox(height: 8),
-                          ...getRepeatDates().asMap().entries.map((entry) {
-                            final index = entry.key;
-                            final date = entry.value;
+                          if (repeatEnabled) ...[
+                            const SizedBox(height: 8),
 
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.calendar_today_outlined,
-                                    size: 18,
-                                    color: Color(0xFF2563EB),
+                            Row(
+                              children: [
+                                const Text(
+                                  'Number of weeks',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
                                   ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Text(
-                                      DateFormat('EEE, MMM d, yyyy').format(date),
-                                    ),
+                                ),
+
+                                const Spacer(),
+
+                                IconButton(
+                                  color: Colors.redAccent,
+                                  onPressed: repeatWeeks > 2
+                                      ? () {
+                                    setState(() {
+                                      repeatWeeks--;
+                                    });
+                                  }
+                                      : null,
+                                  icon: const Icon(Icons.remove),
+                                ),
+
+                                Text(
+                                  '$repeatWeeks',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  Text(
-                                    'Week ${index + 1}',
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12
-                                    ),
-                                  )
-                                ],
+                                ),
+
+                                IconButton(
+                                  color: Color(0xFF2563EB),
+                                  onPressed: repeatWeeks < 20
+                                      ? () {
+                                    setState(() {
+                                      repeatWeeks++;
+                                    });
+                                  }
+                                      : null,
+                                  icon: const Icon(Icons.add),
+                                ),
+                              ],
+                            ),
+                            Text('$repeatWeeks dated slots will be created, one week apart.'),
+                          ],
+                          if (repeatEnabled) ...[
+                            const SizedBox(height: 12),
+                            const Text(
+                              'Repeat preview',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14
                               ),
-                            );
-                          })
-                        ]
-                      ],
-                    ),
+                            ),
+                            const SizedBox(height: 8),
+                            ...getRepeatDates().asMap().entries.map((entry) {
+                              final index = entry.key;
+                              final date = entry.value;
+
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.calendar_today_outlined,
+                                      size: 18,
+                                      color: Color(0xFF2563EB),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        DateFormat('EEE, MMM d, yyyy').format(date),
+                                      ),
+                                    ),
+                                    Text(
+                                      'Week ${index + 1}',
+                                      style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 12
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            })
+                          ],
+                        ],
+                      ),
+                    ],
                     //outline button
                     OutlinedButton.icon(
                       onPressed: () async {
@@ -510,7 +552,15 @@ class _AddSlotState extends State<AddSlot> {
                               return;
                             }
 
-                            final bool success = await InstructorService.createConsultationSlot(slotData);
+                            final bool isEditing = widget.slot != null;
+                            bool success = false;
+
+                            if (isEditing) {
+                              final int slotId = widget.slot!['id'];
+                              success = await InstructorService.updateConsultationSlot(slotId, slotData);
+                            } else {
+                              success = await InstructorService.createConsultationSlot(slotData);
+                            }
 
                             if (!mounted) return;
 
@@ -518,8 +568,12 @@ class _AddSlotState extends State<AddSlot> {
                               _slotMessengerKey.currentState
                                 ?..hideCurrentSnackBar()
                                 ..showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Consultation slot created successfully!'),
+                                  SnackBar(
+                                    content: Text(
+                                      isEditing
+                                          ? 'Consultation slot updated successfully!'
+                                          : 'Consultation slot created successfully!',
+                                    ),
                                     backgroundColor: Colors.green,
                                     duration: Duration(seconds: 2),
                                   ),
@@ -530,8 +584,12 @@ class _AddSlotState extends State<AddSlot> {
                               if (!mounted) return;
 
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Failed to create slot. Please check for schedule overlaps.'),
+                                SnackBar(
+                                  content: Text(
+                                    isEditing
+                                        ? 'Failed to update slot.'
+                                        : 'Failed to create slot. Please check for schedule overlaps.',
+                                  ),
                                   backgroundColor: Colors.redAccent,
                                 ),
                               );
@@ -560,8 +618,11 @@ class _AddSlotState extends State<AddSlot> {
                         // );
                         // TODO
                       },
-                      icon: const Icon(Icons.event_available, size: 22.0),
-                      label: const Text('Create Slot'),
+                      icon: Icon(
+                        widget.slot != null ? Icons.save : Icons.event_available,
+                        size: 22.0,
+                      ),
+                      label: Text(widget.slot != null ? 'Save Changes' : 'Create Slot'),
                       style: OutlinedButton.styleFrom(
                         minimumSize: Size(double.infinity, 50.0),
                         shape: RoundedRectangleBorder(

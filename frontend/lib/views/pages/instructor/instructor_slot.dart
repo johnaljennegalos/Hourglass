@@ -96,7 +96,8 @@ class _InstructorSlotState extends State<InstructorSlot> {
                       ),
                     ),
                     MenuAnchor(
-                      builder: (context, controller, child) {
+                      alignmentOffset: const Offset(-80, 0),
+                      builder: (BuildContext context, MenuController controller, Widget? child) {
                         return IconButton(
                           icon: const Icon(Icons.more_vert),
                           onPressed: () {
@@ -106,12 +107,27 @@ class _InstructorSlotState extends State<InstructorSlot> {
                       },
                       menuChildren: [
                         MenuItemButton(
-                          leadingIcon: const Icon(Icons.visibility_outlined),
+                          leadingIcon: const Icon(Icons.edit, color: Colors.amber),
+                          onPressed: () async {
+
+                            final bool? shouldRefresh = await Navigator.push<bool>(
+                              context,
+                              MaterialPageRoute(builder: (context) => AddSlot(slot: slot))
+                            );
+
+                            if (shouldRefresh == true) {
+                              _fetchSlots();
+                            }
+                          },
+                          child: const Text('Edit Slot'),
+                        ),
+                        MenuItemButton(
+                          leadingIcon: const Icon(Icons.delete, color: Colors.red),
                           onPressed: () {
                             // Open slot details
                           },
-                          child: const Text('View Details'),
-                        )
+                          child: const Text('Delete Slot'),
+                        ),
                       ],
                     )
                   ],
