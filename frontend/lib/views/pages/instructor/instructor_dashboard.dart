@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/instructor/instructor_slot.dart';
+import 'package:hourglass/views/pages/instructor/profile/instructor_profile.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 
@@ -19,18 +20,18 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
     const Center(child: Text('Notifs Page')),
     const Center(child: Text('Bookings Page')),
     const Center(child: InstructorSlot()),
-    const Center(child: Text('Profile Page')),
+    const Center(child: InstructorProfile()),
     const Center(child: Text('Settings Page')),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF3B82F6),
-        title: Text('HOURGLASS', style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white70),),
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Color(0xFF3B82F6),
+      //   title: Text('HOURGLASS', style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white70),),
+      //   centerTitle: true,
+      // ),
       extendBody: true,
       body: _pages[_selectedIndex],
 
