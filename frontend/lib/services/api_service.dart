@@ -53,6 +53,22 @@ class ApiService{
 
   }
 
+  static Future<http.Response> delete(String endpoint, {Map<String, dynamic>? body, String? token,}) async {
+
+    final url = Uri.parse('$baseUrl$endpoint');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      if (token != null) 'Authorization' : 'Bearer $token',
+    };
+
+    return await http.delete(
+      url,
+      headers: headers,
+    ).timeout(const Duration(seconds: 10));
+
+  }
+
   static Future<int> checkConnection() async {
     try{
       final response = await http.get(

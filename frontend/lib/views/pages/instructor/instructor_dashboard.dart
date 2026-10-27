@@ -31,6 +31,7 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
         title: Text('HOURGLASS', style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white70),),
         centerTitle: true,
       ),
+      extendBody: true,
       body: _pages[_selectedIndex],
 
       bottomNavigationBar: CurvedNavigationBar(

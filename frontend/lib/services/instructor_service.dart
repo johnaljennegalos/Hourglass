@@ -193,4 +193,34 @@ class InstructorService {
     
   }
 
+
+  static Future<bool> deleteConsultationSlot(int slotId) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot delete slot: User is not authenticated.');
+      return false;
+    }
+
+    try{
+
+      final response = await ApiService.delete(
+        '/instructor/slots/$slotId/',
+        token: authToken
+      );
+
+      if (response.statusCode == 204 || response.statusCode == 200) {
+        return true;
+      } else {
+        print('Failed to delete slot (${response.statusCode}): ${response.body}');
+        return false;
+      }
+
+    } catch (e) {
+      print('Error deleting consultation slot: $e');
+      return false;
+    }
+
+  }
+
 }

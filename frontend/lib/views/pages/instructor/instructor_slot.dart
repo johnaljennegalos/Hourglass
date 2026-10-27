@@ -14,6 +14,82 @@ class InstructorSlot extends StatefulWidget {
 
 class _InstructorSlotState extends State<InstructorSlot> {
 
+  Future<void> _confirmAndDeleteSlot(Map<String, dynamic> slot) async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      useRootNavigator: true,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('Delete Consultation Slot'),
+          content: Text('Delete ${slot['date']}?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext, false);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext, true);
+              },
+              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      }
+    );
+
+    if (confirmed != true) {
+      return;
+    }
+
+    final int slotId = slot['id'];
+    final success = await InstructorService.deleteConsultationSlot(slotId);
+
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Slot successfully deleted!'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.only(
+            bottom: 35.0,
+            left: 16.0,
+            right: 16.0,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+      );
+
+      _fetchSlots();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Slot deletion failed!'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.only(
+            bottom: 35.0,
+            left: 16.0,
+            right: 16.0,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+      );
+    }
+
+  }
+
   Widget _buildSlotList(){
     if (_slots.isEmpty){
       return const Padding(
@@ -42,6 +118,7 @@ class _InstructorSlotState extends State<InstructorSlot> {
         final String formattedStartTime = DateFormat('h:mm a').format(parsedStartTime);
         final DateTime parsedEndTime = DateTime.parse('2000-01-01 ' + slot['end_time']);
         final String formattedEndTime = DateFormat('h:mm a').format(parsedEndTime);
+        final MenuController menuController = MenuController();
 
 
         return Card(
@@ -96,6 +173,7 @@ class _InstructorSlotState extends State<InstructorSlot> {
                       ),
                     ),
                     MenuAnchor(
+                      controller: menuController,
                       alignmentOffset: const Offset(-80, 0),
                       builder: (BuildContext context, MenuController controller, Widget? child) {
                         return IconButton(
@@ -124,7 +202,8 @@ class _InstructorSlotState extends State<InstructorSlot> {
                         MenuItemButton(
                           leadingIcon: const Icon(Icons.delete, color: Colors.red),
                           onPressed: () {
-                            // Open slot details
+                            menuController.close();
+                            Future.microtask(() => _confirmAndDeleteSlot(slot));
                           },
                           child: const Text('Delete Slot'),
                         ),
