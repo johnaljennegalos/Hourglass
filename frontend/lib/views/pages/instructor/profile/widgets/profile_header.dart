@@ -62,6 +62,11 @@ class _ProfileHeaderState extends State<ProfileHeader> {
     final String? avatarUrl = _profileData?['avatar'];
 
     return Container(
+      padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+      decoration: BoxDecoration(
+          color: Colors.blue,
+        borderRadius: BorderRadiusGeometry.circular(8)
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -82,7 +87,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                   height: 26,
                   width: 26,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Colors.blue,
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: Theme.of(context).scaffoldBackgroundColor,
@@ -106,13 +111,14 @@ class _ProfileHeaderState extends State<ProfileHeader> {
           ),
           SizedBox(height: 8,),
           Text(displayName, style: const TextStyle(
-            fontSize: 18,
+            fontSize: 22,
             fontWeight: FontWeight.bold,
+            color: Colors.white
           ),),
           const SizedBox(height: 2),
           Text('$roleTitle • $department', style: TextStyle(
             fontSize: 14,
-            color: Colors.grey[600],
+            color: Color(0xFFDBEAFE),
           ),),
         ],
       ),
