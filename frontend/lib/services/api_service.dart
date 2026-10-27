@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService{
-  static const String baseUrl = 'http://192.168.1.8:8000/api';
+  static const String baseUrl = 'http://192.168.1.4:8000/api';
 
   static Future<http.Response> post(
       String endpoint,
@@ -49,6 +49,22 @@ class ApiService{
       url,
       headers: headers,
       body: jsonEncode(body),
+    ).timeout(const Duration(seconds: 10));
+
+  }
+
+  static Future<http.Response> delete(String endpoint, {Map<String, dynamic>? body, String? token,}) async {
+
+    final url = Uri.parse('$baseUrl$endpoint');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      if (token != null) 'Authorization' : 'Bearer $token',
+    };
+
+    return await http.delete(
+      url,
+      headers: headers,
     ).timeout(const Duration(seconds: 10));
 
   }

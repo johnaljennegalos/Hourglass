@@ -160,7 +160,7 @@ class ConsultationSlotListCreateView(generics.ListCreateAPIView):
     serializer_class = ConsultationSlotSerializer
 
     def get_queryset(self):
-        return ConsultationSlot.objects.filter(teacher=self.request.user, is_deleted=False)
+        return ConsultationSlot.objects.filter(teacher=self.request.user, is_deleted=False).order_by('date', 'start_time')
 
 
     def perform_create(self, serializer):
@@ -267,6 +267,7 @@ class InstructorSlotListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(teacher=self.request.user)
+
 
 
 #GET PATCH DELETE

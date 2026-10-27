@@ -97,4 +97,130 @@ class InstructorService {
 
   }
 
+  static Future<bool> createConsultationSlot(Map<String, dynamic> slotData) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot create slot: User is not authenticated.');
+      return false;
+    }
+
+    try{
+
+      final response = await ApiService.post(
+        '/instructor/slots/',
+        body: slotData,
+        token: authToken
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return true;
+      } else {
+        print('Failed [${response.statusCode}]: ${response.body}');
+        return false;
+      }
+
+    } catch (e) {
+      print('An error occurred while creating consultation slot: $e');
+      return false;
+    }
+  }
+
+  static Future<List<dynamic>> getSlots() async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot fetch profile: User is not authenticated.');
+      return [];
+    }
+
+    try{
+
+      final response = await ApiService.get(
+        '/instructor/me/slots/',
+        token: authToken
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> slotListData = jsonDecode(response.body);
+        return slotListData;
+      } else if (response.statusCode == 401 || response.statusCode == 403) {
+        print('Unauthorized: Access token expired or invalid.');
+        return [];
+      } else {
+        print(response.statusCode);
+        return [];
+      }
+
+    } catch (e) {
+      print('An error occurred while fetching consultation slot: $e');
+      return [];
+    }
+
+
+  }
+
+
+  static Future<bool> updateConsultationSlot(int slotId, Map<String, dynamic> data) async {
+
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot update slot: User is not authenticated.');
+      return false;
+    }
+
+    try{
+      
+      final response = await ApiService.patch(
+        '/instructor/slots/$slotId/',
+        token: authToken,
+        body: data
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return true;
+      } else {
+        print('Failed to update slot (${response.statusCode}): ${response.body}');
+        return false;
+      }
+      
+    } catch (e) {
+
+      print('Error updating consultation slot: $e');
+      return false;
+    }
+    
+  }
+
+
+  static Future<bool> deleteConsultationSlot(int slotId) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot delete slot: User is not authenticated.');
+      return false;
+    }
+
+    try{
+
+      final response = await ApiService.delete(
+        '/instructor/slots/$slotId/',
+        token: authToken
+      );
+
+      if (response.statusCode == 204 || response.statusCode == 200) {
+        return true;
+      } else {
+        print('Failed to delete slot (${response.statusCode}): ${response.body}');
+        return false;
+      }
+
+    } catch (e) {
+      print('Error deleting consultation slot: $e');
+      return false;
+    }
+
+  }
+
 }
