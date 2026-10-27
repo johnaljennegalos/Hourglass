@@ -2,6 +2,7 @@ import 'dart:convert';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import 'package:http/http.dart' as http;
+import 'dart:io';
 
 //create equivalent method for every method define in views later
 
@@ -221,6 +222,35 @@ class InstructorService {
       return false;
     }
 
+  }
+
+
+  static Future<bool> updatInstructoreAvatar(File imageFile) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot upload avatar: User is not authenticated.');
+      return false;
+    }
+
+    try {
+      final response = await ApiService.patchMultipart(
+        '/instructor/me/profile/',
+        file: imageFile,
+        fileFieldName: 'avatar',
+        token: authToken,
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print('Failed avatar upload (${response.statusCode}): ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Exception during avatar upload: $e');
+      return false;
+    }
   }
 
 }

@@ -44,6 +44,8 @@ class User(AbstractUser):
     specialization = models.CharField(max_length=100, blank=True, null=True)
     employee_id = models.CharField(max_length=100, blank=True, null=True, unique=True)
 
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["email", "first_name", "last_name"]
 

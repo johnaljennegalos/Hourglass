@@ -12,3 +12,6 @@ ENV/
 
 # Environment variables & secrets
 .env
+
+# Media uploads
+/media/

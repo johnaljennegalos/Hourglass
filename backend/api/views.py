@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import generics, mixins
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 from django.contrib.auth import get_user_model
 from django.db.models import Q, Count
@@ -403,6 +404,7 @@ class InstructorAnalyticsView(APIView):
 class InstructorProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated, IsInstructor]
     serializer_class = InstructorSelfProfileSerializer
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     def get_object(self):
         return self.request.user

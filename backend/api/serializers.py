@@ -32,6 +32,7 @@ class UserGeneralSerializer(serializers.ModelSerializer):
             'department',
             'specialization',
             'employee_id',
+            'avatar'
         ]
 
         extra_kwargs = {
@@ -322,6 +323,7 @@ class InstructorBookingDetailSerializer(serializers.ModelSerializer):
     slot_start_time = serializers.TimeField(source='slot.start_time', read_only=True)
     slot_end_time = serializers.TimeField(source='slot.end_time', read_only=True)
     slot_location = serializers.CharField(source='slot.location', read_only=True)
+    student_avatar = serializers.ImageField(source='student.avatar', read_only=True)
 
     class Meta:
         model = ConsultationBooking
@@ -341,6 +343,7 @@ class InstructorBookingDetailSerializer(serializers.ModelSerializer):
             'slot_start_time',
             'slot_end_time',
             'slot_location'
+            'student_avatar'
         ]
 
         read_only_fields = fields
@@ -363,6 +366,7 @@ class ConsultationSlotDetailSerializer(serializers.ModelSerializer):
             'max_capacity',
             'location',
             'date',
+
         ]
 
 class StudentBookingHistorySerializer(serializers.ModelSerializer):
@@ -664,6 +668,7 @@ class InstructorPublicProfileSerializer(serializers.ModelSerializer):
             'contact_number',
             'department',
             'specialization',
+            'avatar'
         ]
         
         
@@ -748,7 +753,8 @@ class InstructorSelfProfileSerializer(serializers.ModelSerializer):
             'department',
             'specialization',
             'employee_id',
-            'role'
+            'role',
+            'avatar'
         ]
 
         read_only_fields = ['id', 'email', 'role', 'employee_id']
