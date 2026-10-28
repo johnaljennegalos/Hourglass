@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/instructor/profile/widgets/profile_header.dart';
 import 'package:hourglass/views/pages/instructor/profile/widgets/account_section.dart';
 import 'package:hourglass/views/pages/instructor/profile/widgets/preference_section.dart';
+import 'package:hourglass/views/pages/instructor/profile/widgets/account_actions.dart';
 
 class InstructorProfile extends StatefulWidget {
   const InstructorProfile({super.key});
@@ -26,7 +27,9 @@ class _InstructorProfileState extends State<InstructorProfile> {
                 SizedBox(height: 10,),
                 AccountSection(),
                 SizedBox(height: 10,),
-                PreferenceSection()
+                PreferenceSection(),
+                SizedBox(height: 10,),
+                AccountActions()
               ],
             ),
           ),
