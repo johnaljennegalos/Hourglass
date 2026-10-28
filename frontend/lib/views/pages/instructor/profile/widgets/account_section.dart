@@ -14,7 +14,7 @@ class AccountSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
-                leading: Icon(Icons.person),
+                leading: Icon(Icons.person, color: Colors.blue,),
                 title: Text('Edit Profile'),
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () {
@@ -23,7 +23,7 @@ class AccountSection extends StatelessWidget {
               ),
               Divider(),
               ListTile(
-                leading: Icon(Icons.calendar_today),
+                leading: Icon(Icons.calendar_today, color: Colors.blue,),
                 title: Text('Manage Availability Slots'),
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () {
@@ -32,7 +32,7 @@ class AccountSection extends StatelessWidget {
               ),
               Divider(),
               ListTile(
-                leading: Icon(Icons.history),
+                leading: Icon(Icons.history, color: Colors.blue,),
                 title: Text('Consultation History'),
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () {

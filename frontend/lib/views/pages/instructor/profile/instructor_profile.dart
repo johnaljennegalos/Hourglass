@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/instructor/profile/widgets/profile_header.dart';
 import 'package:hourglass/views/pages/instructor/profile/widgets/account_section.dart';
+import 'package:hourglass/views/pages/instructor/profile/widgets/preference_section.dart';
 
 class InstructorProfile extends StatefulWidget {
   const InstructorProfile({super.key});
@@ -22,7 +23,10 @@ class _InstructorProfileState extends State<InstructorProfile> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ProfileHeader(),
-                AccountSection()
+                SizedBox(height: 10,),
+                AccountSection(),
+                SizedBox(height: 10,),
+                PreferenceSection()
               ],
             ),
           ),
