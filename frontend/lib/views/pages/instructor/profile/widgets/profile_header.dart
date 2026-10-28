@@ -15,12 +15,46 @@ class _ProfileHeaderState extends State<ProfileHeader> {
   bool _isLoading = true;
   bool _isUploading = false;
 
+  List<dynamic> _slots = [];
+  int get totalSlotsCount => _slots.length;
+
   final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
    super.initState();
    _fetchProfile();
+   _fetchSlots();
+  }
+
+  Future<void> _fetchSlots() async {
+    setState(() => _isLoading = true);
+
+    final slotsData = await InstructorService.getSlots();
+
+    // print('DEBUG SLOTS RESPONSE: $slotsData');
+
+    if (mounted) {
+      setState(() {
+        _slots = slotsData ?? [];
+        _isLoading = false;
+      });
+    }
+  }
+
+  int get totalBookedSeats {
+    return _slots.fold<int>(0, (sum, slot){
+      return sum + ((slot['booked_count'] as int?) ?? 0);
+    });
+  }
+
+  int get totalAvailableSeats{
+    return _slots.fold<int>(0, (sum, slot) {
+      int maxCapacity = (slot['max_capacity'] as int) ?? 0;
+      int booked = (slot['booked_count'] as int) ?? 0;
+      int remaining = maxCapacity - booked;
+      return sum + (remaining > 0 ? remaining : 0);
+    });
   }
 
   Future<void> _fetchProfile() async {
@@ -186,6 +220,31 @@ class _ProfileHeaderState extends State<ProfileHeader> {
             fontSize: 14,
             color: Color(0xFFDBEAFE),
           ),),
+          Divider(),
+          SizedBox(height: 8,),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    Icon(Icons.calendar_today_outlined, color: Colors.white70,),
+                    Text('${totalSlotsCount} slots', style: TextStyle(
+                      color: Colors.white70
+                    ),),
+                  ],
+                ),
+              ),
+              VerticalDivider(),
+              Expanded(
+                child: Column(
+                  children: [
+                    Icon(Icons.calendar_today_outlined),
+                    Text('${totalBookedSeats} Consultations'),
+                  ],
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
