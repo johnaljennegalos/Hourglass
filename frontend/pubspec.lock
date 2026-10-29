@@ -544,6 +544,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.5.2"
+  profile_lift:
+    dependency: "direct main"
+    description:
+      name: profile_lift
+      sha256: "01045ce24df49872ef66d3c2125e9affbab039770a39862a600fde0ceb362d30"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   pub_semver:
     dependency: transitive
     description:

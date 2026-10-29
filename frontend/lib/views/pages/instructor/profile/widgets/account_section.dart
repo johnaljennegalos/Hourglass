@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hourglass/views/pages/instructor/profile/widgets/edit_profile/edit_profile.dart';
 
 class AccountSection extends StatelessWidget {
   const AccountSection({super.key});
@@ -18,7 +19,12 @@ class AccountSection extends StatelessWidget {
                 title: Text('Edit Profile'),
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () {
-                  //route to edit
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (context) => const EditProfile(),
+                    ),
+                  );
                 },
               ),
               Divider(),
