@@ -4,7 +4,9 @@ import 'package:hourglass/services/instructor_service.dart';
 
 
 class PersonalInformationForm extends StatefulWidget {
-  const PersonalInformationForm({super.key});
+  final VoidCallback? onSaveSuccess;
+
+  const PersonalInformationForm({super.key, this.onSaveSuccess});
 
   @override
   State<PersonalInformationForm> createState() => _PersonalInformationFormState();
@@ -63,6 +65,18 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(40.0),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    final bool isEmployeeIdEditable =
+        employeeIDController.text.trim().isEmpty;
+
     return Form(
       key: _formKey,
       child: Column(
@@ -71,7 +85,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
           Text("Personal Information"),
           TextFormField(
             controller: employeeIDController,
-            enabled: employeeIDController.text.isEmpty,
+            enabled: isEmployeeIdEditable,
             style: const TextStyle(color: Colors.black87),
             decoration: const InputDecoration(
               labelText: 'Employee ID',
@@ -221,7 +235,11 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
 
                     FocusScope.of(context).unfocus();
 
-                    Navigator.pop(context, true);
+                    if (widget.onSaveSuccess != null) {
+                      widget.onSaveSuccess!();
+                    } else {
+                      Navigator.pop(context, true);
+                    }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(

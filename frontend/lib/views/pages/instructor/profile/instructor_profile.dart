@@ -12,6 +12,13 @@ class InstructorProfile extends StatefulWidget {
 }
 
 class _InstructorProfileState extends State<InstructorProfile> {
+  Key _headerKey = UniqueKey();
+
+  void _refreshProfile() {
+    setState(() {
+      _headerKey = UniqueKey();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +30,9 @@ class _InstructorProfileState extends State<InstructorProfile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                ProfileHeader(),
+                ProfileHeader(key: _headerKey,),
                 SizedBox(height: 10,),
-                AccountSection(),
+                AccountSection(onProfileUpdated: _refreshProfile),
                 SizedBox(height: 10,),
                 PreferenceSection(),
                 SizedBox(height: 10,),
