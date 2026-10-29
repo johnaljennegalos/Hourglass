@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hourglass/views/pages/instructor/profile/widgets/edit_profile/edit_profile.dart';
+import 'package:hourglass/views/pages/instructor/profile/widgets/edit_profile/widgets/personal_information_form.dart';
 
 class AccountSection extends StatelessWidget {
-  const AccountSection({super.key});
+  final VoidCallback? onProfileUpdated;
+  const AccountSection({super.key, this.onProfileUpdated});
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +20,17 @@ class AccountSection extends StatelessWidget {
                 leading: Icon(Icons.person, color: Colors.blue,),
                 title: Text('Edit Profile'),
                 trailing: Icon(Icons.keyboard_arrow_right),
-                onTap: () {
-                  //route to edit
+                onTap: () async{
+                  final bool? refreshed = await Navigator.push<bool>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EditProfile(),
+                    )
+                  );
+
+                  if (refreshed == true && onProfileUpdated != null) {
+                    onProfileUpdated!();
+                  }
                 },
               ),
               Divider(),

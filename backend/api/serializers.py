@@ -757,4 +757,9 @@ class InstructorSelfProfileSerializer(serializers.ModelSerializer):
             'avatar'
         ]
 
-        read_only_fields = ['id', 'email', 'role', 'employee_id']
+        read_only_fields = ['id', 'email', 'role']
+
+    def validate_employee_id(self, value):
+        if self.instance and self.instance.employee_id and self.instance.employee_id != value:
+            raise serializers.ValidationError("Employee ID cannot be modified once set.")
+        return value
