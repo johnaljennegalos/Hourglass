@@ -412,3 +412,21 @@ class InstructorProfileView(generics.RetrieveUpdateAPIView):
 
 
 
+class logoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        refresh_token = request.data.get('refresh_token')
+
+        if not refresh_token:
+            return Response({'error': 'Token was not provided in the request body.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response({'detail': 'Successfully logged out.'}, status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+

@@ -60,16 +60,22 @@ class AuthService {
   }
 
   static Future<void> logout() async {
-
     try{
+      final String? refreshToken = await _storage.read(key: 'refresh_token');
+      if(refreshToken != null && _accessToken != null) {
+        await ApiService.post(
+          '/auth/logout/',
+          body: {'refresh_token': refreshToken},
+          token: _accessToken,
+        );
+        print('Token successfully blacklisted on server.');
+      }
+    } catch (e) {
+      print('Backend logout failed or skipped (e.g. offline or expired token): $e');
+    } finally {
       await _storage.deleteAll();
       _accessToken = null;
-      print('User logged out cleanly.');
-    } catch (e) {
-      print('Error during log out: $e');
-      _accessToken = null;
     }
-
   }
 
 }
