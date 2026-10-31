@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/student/book_slot/widgets/section_header.dart';
 import 'package:hourglass/views/pages/student/book_slot/widgets/instructor_selection_card.dart';
 import 'package:hourglass/views/pages/student/book_slot/widgets/instructor_search_field.dart';
+import 'package:hourglass/views/pages/student/book_slot/widgets/instructor_selection.dart';
 
 class BookSlot extends StatefulWidget {
   const BookSlot({super.key});
@@ -12,6 +13,7 @@ class BookSlot extends StatefulWidget {
 
 class _BookSlotState extends State<BookSlot> {
   String _searchQuery = '';
+  String? _selectedInstructorId;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,13 @@ class _BookSlotState extends State<BookSlot> {
                     _searchQuery = value;
                   });
                 },),
-                InstructorSelectionCard(searchQuery: _searchQuery, onInstructorSelected: ,)
+                InstructorSelection(searchQuery: _searchQuery, selectedInstructorId: _selectedInstructorId, onInstructorSelected: (instructorId) {
+                  setState(() {
+                    _selectedInstructorId = instructorId;
+                  });
+
+                  print('Selected Instructor: $instructorId');
+                },)
               ],
             ),
           ),
