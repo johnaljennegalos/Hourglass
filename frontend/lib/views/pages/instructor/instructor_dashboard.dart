@@ -27,11 +27,6 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Color(0xFF3B82F6),
-      //   title: Text('HOURGLASS', style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white70),),
-      //   centerTitle: true,
-      // ),
       extendBody: true,
       body: _pages[_selectedIndex],
 
