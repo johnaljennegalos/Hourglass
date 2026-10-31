@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
+import 'package:hourglass/views/pages/student/book_slot/book_slot.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -17,7 +18,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   final List<Widget> _pages = [
     const Center(child: Text('Home')),
-    const Center(child: Text('Book Slot')),
+    const Center(child: BookSlot()),
     const Center(child: Text('My Bookings')),
     const Center(child: Text('Notifications')),
     const Center(child: Text('Profile')),
