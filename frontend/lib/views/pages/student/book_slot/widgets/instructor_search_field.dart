@@ -1,18 +1,38 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class InstructorSearchField extends StatefulWidget {
-  const InstructorSearchField({super.key});
+  final ValueChanged<String> onChanged;
+  const InstructorSearchField({super.key, required this.onChanged});
 
   @override
   State<InstructorSearchField> createState() => _InstructorSearchFieldState();
 }
 
 class _InstructorSearchFieldState extends State<InstructorSearchField> {
+  final TextEditingController _searchInputController = TextEditingController();
+  Timer? _debounceTimer;
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    _searchInputController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 55,
       child: TextField(
+        controller: _searchInputController,
+        onChanged: (text) {
+          if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
+
+          _debounceTimer = Timer(const Duration(milliseconds: 400), () {
+            widget.onChanged(text);
+          });
+        },
         decoration: InputDecoration(
           isDense: true,
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),

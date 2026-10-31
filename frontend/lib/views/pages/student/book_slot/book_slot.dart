@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/student/book_slot/widgets/section_header.dart';
-import 'package:hourglass/views/pages/student/book_slot/widgets/instructor_selection.dart';
+import 'package:hourglass/views/pages/student/book_slot/widgets/instructor_selection_card.dart';
 import 'package:hourglass/views/pages/student/book_slot/widgets/instructor_search_field.dart';
 
 class BookSlot extends StatefulWidget {
@@ -11,6 +11,8 @@ class BookSlot extends StatefulWidget {
 }
 
 class _BookSlotState extends State<BookSlot> {
+  String _searchQuery = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,8 +24,12 @@ class _BookSlotState extends State<BookSlot> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SectionHeader(step: 1, title: 'Select Instructor & Subject',),
-                InstructorSearchField(),
-                InstructorSelection()
+                InstructorSearchField(onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                  });
+                },),
+                InstructorSelectionCard(searchQuery: _searchQuery, onInstructorSelected: ,)
               ],
             ),
           ),
