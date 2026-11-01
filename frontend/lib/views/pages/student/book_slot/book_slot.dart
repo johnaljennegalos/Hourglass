@@ -15,6 +15,9 @@ class BookSlot extends StatefulWidget {
 class _BookSlotState extends State<BookSlot> {
   String _searchQuery = '';
   String? _selectedInstructorId;
+  DateTime? _selectedDate;
+  String? _selectedSlotId;
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +42,16 @@ class _BookSlotState extends State<BookSlot> {
 
                   print('Selected Instructor: $instructorId');
                 },),
-                SectionHeader(step: 2, title: 'Select Available Slot',),
-                AvailableSlotSection()
+                if (_selectedInstructorId != null)
+                  AvailableSlotSection(
+                    instructorId: _selectedInstructorId!,
+                    onSlotSelected: (selectedDate, slotId) {
+                      setState(() {
+                        _selectedDate = selectedDate;
+                        _selectedSlotId = slotId;
+                      });
+                    },
+                  ),
               ],
             ),
           ),
