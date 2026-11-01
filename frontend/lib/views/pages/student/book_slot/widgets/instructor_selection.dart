@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/student/book_slot/widgets/instructor_selection_card.dart';
 import 'package:hourglass/views/pages/student/book_slot/models/instructor_model.dart';
+import 'package:http/http.dart' as http;
+import 'package:hourglass/services/student_service.dart';
 
 
 
@@ -39,28 +41,95 @@ class InstructorSelection extends StatefulWidget {
 }
 
 class _InstructorSelectionState extends State<InstructorSelection> {
+  bool _isLoading = false;
+  String? _errorMessage;
+  List<InstructorModel> _instructors = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData(widget.searchQuery);
+  }
+
+  @override
+  void didUpdateWidget(covariant InstructorSelection oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.searchQuery != oldWidget.searchQuery) {
+      _fetchData(widget.searchQuery);
+    }
+  }
+
+  Future<void> _fetchData(String query) async {
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try{
+      final data = await StudentService.getInstructors(query: query);
+
+      if (mounted) {
+        setState(() {
+          if (data != null) {
+            _instructors = data.map((json) => InstructorModel.fromJson(json as Map<String, dynamic>)).toList();
+          } else {
+            _errorMessage = 'Failed to load instructors.';
+          }
+          _isLoading = false;
+        });
+      }
+
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'An error occurred: $e';
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final filteredInstructors = InstructorSelection._mockInstructors.where((instructor) {
-      final query = widget.searchQuery.toLowerCase();
-      return instructor.name.toLowerCase().contains(query) || instructor.department.toLowerCase().contains(query) || instructor.specialization.toLowerCase().contains(query);
-    }).toList();
 
-    if (filteredInstructors.isEmpty) {
-      return const Padding(
+    if (_isLoading) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 30.0),
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (_errorMessage != null) {
+      return Padding(
         padding: EdgeInsets.symmetric(vertical: 20),
         child: Center(
-          child: Text(
-            'No instructors found.',
-            style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
-          ),
+          child: Text(_errorMessage!, style: TextStyle(
+            color: Colors.red,
+          ),),
+        ),
+      );
+    }
+
+    if (_instructors.isEmpty) {
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: 20),
+        child: Center(
+          child: Text('No instructors found', style: TextStyle(
+            color: Colors.grey,
+            fontStyle: FontStyle.italic
+          ),),
         ),
       );
     }
 
 
     return Column(
-      children: filteredInstructors.map((instructor) {
+      children: _instructors.map((instructor) {
         final isSelected = instructor.id == widget.selectedInstructorId;
         return Padding(
           padding: EdgeInsets.only(bottom: 10.0),

@@ -71,7 +71,7 @@ class StudentService {
 
   }
 
-  static Future<List<dynamic>?> getInstructors() async {
+  static Future<List<dynamic>?> getInstructors({String? query}) async {
     String? authToken = AuthService.accessToken;
 
     if (authToken == null) {
@@ -81,7 +81,11 @@ class StudentService {
 
     try{
 
-      final response = await ApiService.get('/instructor/', token: authToken);
+      final String path = (query != null && query.trim().isNotEmpty)
+          ? '/instructor/?search=${Uri.encodeComponent(query.trim())}'
+          : '/instructor/';
+
+      final response = await ApiService.get(path, token: authToken);
 
       if (response.statusCode == 200) {
         final List<dynamic> instructorList = jsonDecode(response.body);

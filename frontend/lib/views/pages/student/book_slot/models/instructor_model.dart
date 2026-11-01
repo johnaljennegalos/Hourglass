@@ -16,4 +16,18 @@ class InstructorModel {
     required this.avatarUrl
   });
 
+  factory InstructorModel.fromJson(Map<String, dynamic> json) {
+    final firstName = json['first_name'] ?? '';
+    final lastName = json['last_name'] ?? '';
+    final fullName = '$firstName $lastName'.trim();
+
+    return InstructorModel(
+      id: json['id'].toString(),
+      name: fullName.isNotEmpty ? fullName : (json['username'] ?? 'Instructor'),
+      department: json['department'] ?? '',
+      specialization: json['specialization'] ?? '',
+      avatarUrl: json['avatar_url'] ?? json['avatar'],
+    );
+  }
+
 }
