@@ -13,7 +13,7 @@ class InstructorModel {
     required this.name,
     required this.department,
     required this.specialization,
-    required this.avatarUrl
+    required this.avatarUrl,
   });
 
   factory InstructorModel.fromJson(Map<String, dynamic> json) {

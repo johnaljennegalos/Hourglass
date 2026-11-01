@@ -3,6 +3,7 @@ import 'package:hourglass/views/pages/student/book_slot/widgets/section_header.d
 import 'package:hourglass/views/pages/student/book_slot/widgets/instructor_selection_card.dart';
 import 'package:hourglass/views/pages/student/book_slot/widgets/instructor_search_field.dart';
 import 'package:hourglass/views/pages/student/book_slot/widgets/instructor_selection.dart';
+import 'package:hourglass/views/pages/student/book_slot/widgets/available_slot_section.dart';
 
 class BookSlot extends StatefulWidget {
   const BookSlot({super.key});
@@ -37,7 +38,9 @@ class _BookSlotState extends State<BookSlot> {
                   });
 
                   print('Selected Instructor: $instructorId');
-                },)
+                },),
+                SectionHeader(step: 2, title: 'Select Available Slot',),
+                AvailableSlotSection()
               ],
             ),
           ),

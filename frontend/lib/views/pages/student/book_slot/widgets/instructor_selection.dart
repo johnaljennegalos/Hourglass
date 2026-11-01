@@ -12,29 +12,29 @@ class InstructorSelection extends StatefulWidget {
   final ValueChanged<String> onInstructorSelected;
   const InstructorSelection({super.key, required this.searchQuery, required this.onInstructorSelected, required this.selectedInstructorId});
 
-  static final List<InstructorModel> _mockInstructors = [
-    InstructorModel(
-      id: '1234567890',
-      name: 'Manny Pacquiao',
-      department: 'Computer Science',
-      specialization: 'Left Hook Algorithm',
-      avatarUrl: null,
-    ),
-    InstructorModel(
-      id: '1',
-      name: 'Dr. Jane Smith',
-      department: 'College of Computer Studies',
-      specialization: 'Web Development',
-      avatarUrl: null,
-    ),
-    InstructorModel(
-      id: '2',
-      name: 'Prof. John Doe',
-      department: 'College of Engineering',
-      specialization: 'Data Structures & Algorithms',
-      avatarUrl: null,
-    ),
-  ];
+  // static final List<InstructorModel> _mockInstructors = [
+  //   InstructorModel(
+  //     id: '1234567890',
+  //     name: 'Manny Pacquiao',
+  //     department: 'Computer Science',
+  //     specialization: 'Left Hook Algorithm',
+  //     avatarUrl: null,
+  //   ),
+  //   InstructorModel(
+  //     id: '1',
+  //     name: 'Dr. Jane Smith',
+  //     department: 'College of Computer Studies',
+  //     specialization: 'Web Development',
+  //     avatarUrl: null,
+  //   ),
+  //   InstructorModel(
+  //     id: '2',
+  //     name: 'Prof. John Doe',
+  //     department: 'College of Engineering',
+  //     specialization: 'Data Structures & Algorithms',
+  //     avatarUrl: null,
+  //   ),
+  // ];
 
   @override
   State<InstructorSelection> createState() => _InstructorSelectionState();
