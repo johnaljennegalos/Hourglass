@@ -86,6 +86,16 @@ class _AvailableSlotSectionState extends State<AvailableSlotSection> {
         .map((slot) => slot.date)
         .toSet();
 
+    final String? formattedSelectedDate = selectedDate != null
+        ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+        : null;
+
+    final List<SlotModel> dailySlots = formattedSelectedDate != null
+        ? _allSlots
+        .where((slot) => slot.date == formattedSelectedDate && slot.isAvailable)
+        .toList()
+        : [];
+
     return Column(
       children: [
         const SectionHeader(step: 2, title: 'Select Available Slot'),
@@ -228,7 +238,55 @@ class _AvailableSlotSectionState extends State<AvailableSlotSection> {
               ],
             ),
           ),
-        )
+        ),
+        if (selectedDate != null) ...[
+          const SizedBox(height: 6,),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Available Slots for ${DateFormat('EEEE, MMM d, yyyy').format(selectedDate!)}',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          const SizedBox(height: 6,),
+          if (dailySlots.isEmpty)
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  'No available slots for this date.',
+                  style: TextStyle(color: Colors.grey, fontSize: 13),
+                ),
+              ),
+            )
+          else
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: dailySlots.map((slot) {
+                  final bool isSelected = slot.id == _selectedSlotId;
+
+                  return ChoiceChip(
+                    label: Text('${slot.startTime} - ${slot.endTime}'),
+                    selected: isSelected,
+                    selectedColor: Theme.of(context).primaryColor,
+                    onSelected: (bool selected) {
+                      setState(() {
+                        _selectedSlotId = slot.id;
+                      });
+                      widget.onSlotSelected?.call(selectedDate!, slot.id);
+                    },
+                  );
+                }).toList(),
+              ),
+            )
+        ]
       ],
     );
   }
