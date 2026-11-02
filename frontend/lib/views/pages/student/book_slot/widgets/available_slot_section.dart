@@ -1,0 +1,293 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:hourglass/views/pages/student/book_slot/widgets/section_header.dart';
+import 'package:hourglass/views/pages/student/book_slot/models/slot_model.dart';
+import 'package:hourglass/services/student_service.dart';
+
+class AvailableSlotSection extends StatefulWidget {
+  final String? instructorId;
+  final Function(DateTime date, String slotId)? onSlotSelected;
+  const AvailableSlotSection({super.key, required this.instructorId, required this.onSlotSelected});
+
+  @override
+  State<AvailableSlotSection> createState() => _AvailableSlotSectionState();
+}
+
+class _AvailableSlotSectionState extends State<AvailableSlotSection> {
+  DateTime displayedMonth = DateTime.now();
+  DateTime? selectedDate;
+  String? _selectedSlotId;
+  List<SlotModel> _availableSlots = [];
+  bool _isLoading = false;
+  String? _errorMessage;
+  List<SlotModel> _allSlots = [];
+
+  int get blankSpaces =>
+      DateTime(displayedMonth.year, displayedMonth.month, 1).weekday % 7;
+
+  int get totalDaysInMonth =>
+      DateTime(displayedMonth.year, displayedMonth.month + 1, 0).day;
+
+  Future<void> _fetchSlots() async {
+    if (widget.instructorId == null) return;
+
+    if(mounted) {
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+      
+      try{
+        final response = await StudentService.getAvailableSlot(int.parse(widget.instructorId!));
+
+        final loadedSlots = (response as List).map((json) => SlotModel.fromJson(json)).toList();
+
+        if (mounted) {
+          setState(() {
+            _allSlots = loadedSlots;
+            _isLoading = false;
+          });
+        }
+      } catch(e) {
+        if (mounted) {
+          setState(() {
+            _errorMessage = 'Failed to load slots.';
+            _isLoading = false;
+          });
+        }
+      }
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant AvailableSlotSection oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+
+    if(widget.instructorId != oldWidget.instructorId) {
+      selectedDate = null;
+      _selectedSlotId = null;
+
+      _fetchSlots();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchSlots();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    final Set<String> availableDateSet = _allSlots
+        .where((slot) => slot.isAvailable)
+        .map((slot) => slot.date)
+        .toSet();
+
+    final String? formattedSelectedDate = selectedDate != null
+        ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+        : null;
+
+    final List<SlotModel> dailySlots = formattedSelectedDate != null
+        ? _allSlots
+        .where((slot) => slot.date == formattedSelectedDate && slot.isAvailable)
+        .toList()
+        : [];
+
+    return Column(
+      children: [
+        const SectionHeader(step: 2, title: 'Select Available Slot'),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('Select Month & Year'),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.chevron_left),
+                      onPressed: () {
+                        setState(() {
+                          displayedMonth = DateTime(
+                            displayedMonth.year,
+                            displayedMonth.month - 1,
+                          );
+                        });
+                      },
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          DateFormat('MMMM yyyy').format(displayedMonth),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.chevron_right),
+                      onPressed: () {
+                        setState(() {
+                          displayedMonth = DateTime(
+                            displayedMonth.year,
+                            displayedMonth.month + 1,
+                          );
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                // Days of Week Header
+                Row(
+                  children: [
+                    'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'
+                  ].map((day) => Expanded(
+                    child: Center(
+                      child: Text(
+                        day,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                      ),
+                    ),
+                  )).toList(),
+                ),
+                const SizedBox(height: 10),
+                // Calendar Grid
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 7,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                  ),
+                  itemCount: blankSpaces + totalDaysInMonth,
+                  itemBuilder: (context, index) {
+                    if (index < blankSpaces) {
+                      return const SizedBox.shrink();
+                    }
+
+                    final int dayNumber = index - blankSpaces + 1;
+
+                    final DateTime currentCellDate = DateTime(
+                      displayedMonth.year,
+                      displayedMonth.month,
+                      dayNumber,
+                    );
+
+                    final String formattedCellDate = DateFormat('yyyy-MM-dd').format(currentCellDate);
+
+                    final bool hasAvailableSlot = availableDateSet.contains(formattedCellDate);
+
+                    final bool isSelected = selectedDate?.year == currentCellDate.year &&
+                        selectedDate?.month == currentCellDate.month &&
+                        selectedDate?.day == currentCellDate.day;
+
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedDate = currentCellDate;
+                        });
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        // alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: isSelected ? Theme.of(context).primaryColor : Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: isSelected ? Theme.of(context).primaryColor : const Color(0xFFE2E8F0),
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '$dayNumber',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: isSelected ? Colors.white : Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            if (hasAvailableSlot)
+                              Container(
+                                width: 6,
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  color: isSelected ? Colors.white : const Color(0xFF22C55E),
+                                  shape: BoxShape.circle
+                                ),
+                              )
+                            else
+                              const SizedBox(height: 6),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
+        ),
+        if (selectedDate != null) ...[
+          const SizedBox(height: 6,),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Available Slots for ${DateFormat('EEEE, MMM d, yyyy').format(selectedDate!)}',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          const SizedBox(height: 6,),
+          if (dailySlots.isEmpty)
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  'No available slots for this date.',
+                  style: TextStyle(color: Colors.grey, fontSize: 13),
+                ),
+              ),
+            )
+          else
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: dailySlots.map((slot) {
+                  final bool isSelected = slot.id == _selectedSlotId;
+
+                  return ChoiceChip(
+                    label: Text('${slot.startTime} - ${slot.endTime}'),
+                    selected: isSelected,
+                    selectedColor: Theme.of(context).primaryColor,
+                    onSelected: (bool selected) {
+                      setState(() {
+                        _selectedSlotId = slot.id;
+                      });
+                      widget.onSlotSelected?.call(selectedDate!, slot.id);
+                    },
+                  );
+                }).toList(),
+              ),
+            )
+        ]
+      ],
+    );
+  }
+}
