@@ -8,6 +8,7 @@ class SlotModel {
   final String date;
   final String location;
   final String capacity;
+  final bool isAvailable;
 
   SlotModel({
     required this.id,
@@ -16,6 +17,7 @@ class SlotModel {
     required this.date,
     required this.location,
     required this.capacity,
+    required this.isAvailable,
   });
 
   factory SlotModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class SlotModel {
       date: json['date'] ?? '',
       location: json['location'] ?? '',
       capacity: json['capacity'] ?? '',
+      isAvailable: json['is_available'] ?? true,
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:hourglass/views/pages/student/book_slot/widgets/section_header.dart';
 import 'package:hourglass/views/pages/student/book_slot/models/slot_model.dart';
+import 'package:hourglass/services/student_service.dart';
 
 class AvailableSlotSection extends StatefulWidget {
   final String? instructorId;
@@ -18,6 +19,8 @@ class _AvailableSlotSectionState extends State<AvailableSlotSection> {
   String? _selectedSlotId;
   List<SlotModel> _availableSlots = [];
   bool _isLoading = false;
+  String? _errorMessage;
+  List<SlotModel> _allSlots = [];
 
   int get blankSpaces =>
       DateTime(displayedMonth.year, displayedMonth.month, 1).weekday % 7;
@@ -25,8 +28,64 @@ class _AvailableSlotSectionState extends State<AvailableSlotSection> {
   int get totalDaysInMonth =>
       DateTime(displayedMonth.year, displayedMonth.month + 1, 0).day;
 
+  Future<void> _fetchSlots() async {
+    if (widget.instructorId == null) return;
+
+    if(mounted) {
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+      
+      try{
+        final response = await StudentService.getAvailableSlot(int.parse(widget.instructorId!));
+
+        final loadedSlots = (response as List).map((json) => SlotModel.fromJson(json)).toList();
+
+        if (mounted) {
+          setState(() {
+            _allSlots = loadedSlots;
+            _isLoading = false;
+          });
+        }
+      } catch(e) {
+        if (mounted) {
+          setState(() {
+            _errorMessage = 'Failed to load slots.';
+            _isLoading = false;
+          });
+        }
+      }
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant AvailableSlotSection oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+
+    if(widget.instructorId != oldWidget.instructorId) {
+      selectedDate = null;
+      _selectedSlotId = null;
+
+      _fetchSlots();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchSlots();
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    final Set<String> availableDateSet = _allSlots
+        .where((slot) => slot.isAvailable)
+        .map((slot) => slot.date)
+        .toSet();
+
     return Column(
       children: [
         const SectionHeader(step: 2, title: 'Select Available Slot'),
@@ -112,6 +171,10 @@ class _AvailableSlotSectionState extends State<AvailableSlotSection> {
                       dayNumber,
                     );
 
+                    final String formattedCellDate = DateFormat('yyyy-MM-dd').format(currentCellDate);
+
+                    final bool hasAvailableSlot = availableDateSet.contains(formattedCellDate);
+
                     final bool isSelected = selectedDate?.year == currentCellDate.year &&
                         selectedDate?.month == currentCellDate.month &&
                         selectedDate?.day == currentCellDate.day;
@@ -124,7 +187,7 @@ class _AvailableSlotSectionState extends State<AvailableSlotSection> {
                       },
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
-                        alignment: Alignment.center,
+                        // alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: isSelected ? Theme.of(context).primaryColor : Colors.white,
                           borderRadius: BorderRadius.circular(8),
@@ -132,13 +195,31 @@ class _AvailableSlotSectionState extends State<AvailableSlotSection> {
                             color: isSelected ? Theme.of(context).primaryColor : const Color(0xFFE2E8F0),
                           ),
                         ),
-                        child: Text(
-                          '$dayNumber',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: isSelected ? Colors.white : Colors.black,
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '$dayNumber',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: isSelected ? Colors.white : Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            if (hasAvailableSlot)
+                              Container(
+                                width: 6,
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  color: isSelected ? Colors.white : const Color(0xFF22C55E),
+                                  shape: BoxShape.circle
+                                ),
+                              )
+                            else
+                              const SizedBox(height: 6),
+                          ],
                         ),
                       ),
                     );
