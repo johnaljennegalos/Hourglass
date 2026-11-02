@@ -4,6 +4,7 @@ import 'package:hourglass/views/pages/student/book_slot/widgets/instructor_selec
 import 'package:hourglass/views/pages/student/book_slot/widgets/instructor_search_field.dart';
 import 'package:hourglass/views/pages/student/book_slot/widgets/instructor_selection.dart';
 import 'package:hourglass/views/pages/student/book_slot/widgets/available_slot_section.dart';
+import 'package:hourglass/views/pages/student/book_slot/widgets/consultation_details_section.dart';
 
 class BookSlot extends StatefulWidget {
   const BookSlot({super.key});
@@ -52,6 +53,17 @@ class _BookSlotState extends State<BookSlot> {
                       });
                     },
                   ),
+                if (_selectedDate != null && _selectedSlotId != null) ...[
+                  const SizedBox(height: 24),
+                  ConsultationDetailsSection(
+                    onSubmit: (String reason) {
+                      print('Instructor ID: $_selectedInstructorId');
+                      print('Slot ID: $_selectedSlotId');
+                      print('Selected Date: $_selectedDate');
+                      print('Reason: $reason');
+                    },
+                  )
+                ]
               ],
             ),
           ),
