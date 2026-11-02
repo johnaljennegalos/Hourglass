@@ -3,7 +3,8 @@ import 'package:hourglass/views/pages/student/book_slot/widgets/section_header.d
 
 class ConsultationDetailsSection extends StatefulWidget {
   final Function(String reason)? onSubmit;
-  const ConsultationDetailsSection({super.key, required this.onSubmit});
+  final bool isSubmitting;
+  const ConsultationDetailsSection({super.key, required this.onSubmit, this.isSubmitting = false});
 
   @override
   State<ConsultationDetailsSection> createState() => _ConsultationDetailsSectionState();
@@ -78,17 +79,24 @@ class _ConsultationDetailsSectionState extends State<ConsultationDetailsSection>
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: widget.isSubmitting ? null : () {
                     if (_formKey.currentState!.validate()) {
                       widget.onSubmit?.call(_reasonController.text.trim());
                     }
                   },
-                  child: const Text(
-                    'Confirm Booking',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                  child: widget.isSubmitting ? const SizedBox(
+                    height: 20,
+                    width: 30,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white
                     ),
+                  ) : const Text(''
+                      'Confirm Booking',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                   ),
                 ),
               ),
