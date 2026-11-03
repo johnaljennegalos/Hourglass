@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/student/profile/widgets/profile_header.dart';
 import 'package:hourglass/views/pages/student/profile/widgets/account_section.dart';
+import 'package:hourglass/views/pages/student/profile/widgets/preference_section.dart';
+import 'package:hourglass/views/pages/student/profile/widgets/account_actions.dart';
 
 
 class StudentProfile extends StatefulWidget {
@@ -32,10 +34,10 @@ class _StudentProfileState extends State<StudentProfile> {
                 ProfileHeader(key: _headerKey,),
                 SizedBox(height: 10,),
                 AccountSection(onProfileUpdated: _refreshProfile),
-                // SizedBox(height: 10,),
-                // PreferenceSection(),
-                // SizedBox(height: 10,),
-                // AccountActions()
+                SizedBox(height: 10,),
+                PreferenceSection(),
+                SizedBox(height: 10,),
+                AccountActions()
               ],
             ),
           ),

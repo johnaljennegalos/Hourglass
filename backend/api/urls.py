@@ -26,5 +26,5 @@ urlpatterns = [
     path('instructor/me/analytics/', InstructorAnalyticsView.as_view(), name='instructor-analytics'),
     path('instructor/me/profile/', InstructorProfileView.as_view(), name='instructor-profile'),
     path('auth/logout/', logoutView.as_view(), name='logout'),
-    path('student/me/profile', StudentProfileView.as_view(), name='student-me-profile')
+    path('student/me/profile/', StudentProfileView.as_view(), name='student-me-profile')
 ]

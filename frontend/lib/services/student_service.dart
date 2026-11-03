@@ -72,6 +72,41 @@ class StudentService {
 
   }
 
+  static Future<bool> updateProfile(Map<String, dynamic> updateData) async {
+
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot fetch student: User is not authenticated.');
+      return false;
+    }
+
+    try{
+      final response = await ApiService.patch('/student/me/profile/', body: updateData, token: authToken);
+
+      print('UPDATE PROFILE STATUS: ${response.statusCode}');
+      print('UPDATE PROFILE RESPONSE: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        print('Profile updated successfully.');
+        return true;
+      } else if (response.statusCode == 400) {
+        print('Validation error [400]: ${response.body}');
+        return false;
+      } else if (response.statusCode == 401 || response.statusCode == 403) {
+        print('Unauthorized [401]: Access token expired.');
+        return false;
+      } else {
+        print('Failed to update profile [${response.statusCode}]: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('An error occurred while updating profile: $e');
+      return false;
+    }
+
+  }
+
   static Future<List<dynamic>?> getInstructors({String? query}) async {
     String? authToken = AuthService.accessToken;
 
@@ -225,7 +260,7 @@ class StudentService {
 
     try {
       final response = await ApiService.patchMultipart(
-        '/student/me/profile',
+        '/student/me/profile/',
         file: imageFile,
         fileFieldName: 'avatar',
         token: authToken,
