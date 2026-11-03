@@ -2,6 +2,7 @@ import 'dart:convert';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import 'package:http/http.dart' as http;
+import 'dart:io';
 
 //create equivalent method for every method define in views later
 
@@ -67,6 +68,41 @@ class StudentService {
     } catch (e){
       print('An error occurred while getting the profile: $e');
       return null;
+    }
+
+  }
+
+  static Future<bool> updateProfile(Map<String, dynamic> updateData) async {
+
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot fetch student: User is not authenticated.');
+      return false;
+    }
+
+    try{
+      final response = await ApiService.patch('/student/me/profile/', body: updateData, token: authToken);
+
+      print('UPDATE PROFILE STATUS: ${response.statusCode}');
+      print('UPDATE PROFILE RESPONSE: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        print('Profile updated successfully.');
+        return true;
+      } else if (response.statusCode == 400) {
+        print('Validation error [400]: ${response.body}');
+        return false;
+      } else if (response.statusCode == 401 || response.statusCode == 403) {
+        print('Unauthorized [401]: Access token expired.');
+        return false;
+      } else {
+        print('Failed to update profile [${response.statusCode}]: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('An error occurred while updating profile: $e');
+      return false;
     }
 
   }
@@ -212,6 +248,36 @@ class StudentService {
       return false;
     }
 
+  }
+
+  static Future<bool> updatStudentAvatar(File imageFile) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot upload avatar: User is not authenticated.');
+      return false;
+    }
+
+    try {
+      final response = await ApiService.patchMultipart(
+        '/student/me/profile/',
+        file: imageFile,
+        fileFieldName: 'avatar',
+        token: authToken,
+      );
+      print('AVATAR UPLOAD STATUS: ${response.statusCode}');
+      print('AVATAR UPLOAD RESPONSE: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print('Failed avatar upload (${response.statusCode}): ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Exception during avatar upload: $e');
+      return false;
+    }
   }
 
 }

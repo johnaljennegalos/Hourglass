@@ -670,6 +670,32 @@ class InstructorPublicProfileSerializer(serializers.ModelSerializer):
             'specialization',
             'avatar'
         ]
+
+
+class StudentSelfProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'first_name',
+            'last_name',
+            'email',
+            'student_id',
+            'course',
+            'year_level',
+            'section',
+            'address',
+            'contact_number',
+            'role',
+            'avatar',
+        ]
+
+        read_only_fields = ['id', 'email', 'role']
+
+    def validate_student_id(self, value):
+        if self.instance and self.instance.student_id and self.instance.student_id != value:
+            raise serializers.ValidationError("Student ID cannot be modified once set.")
+        return value
         
         
         
