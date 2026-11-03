@@ -128,7 +128,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
     final String rawRole = studentInfo?['role'] ?? 'ST';
     final String roleTitle = rawRole == 'ST' ? 'Student' : 'Instructor';
 
-    final String department = studentInfo?['department'] ?? 'Department Not Specified';
+    final String department = studentInfo?['course'] ?? 'Course Not Specified';
     final String? avatarUrl = studentInfo?['avatar'];
 
 // Extract metrics (matches Django's 'incoming_consultations' key)
