@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import StudentLoginView, StudentRegisterView, InstructorLoginView, InstructorRegisterView, InstructorListView, InstructorDetailView, ConsultationSlotListCreateView, ConsultationSlotDetailView, AvailableSlotListView, ConsultationBookingListCreateView, ConsultationBookingCancelView, StudentBookingHistoryView, InstructorRosterView, AttendanceUpdateView, StudentProfileMetricView, InstructorSlotListCreateView, InstructorSlotDetailView, InstructorBookingListView, InstructorBookingDecisionView, InstructorBookingAttendanceView, InstructorAnalyticsView, InstructorProfileView, SignInView, logoutView
+from .views import StudentLoginView, StudentRegisterView, InstructorLoginView, InstructorRegisterView, InstructorListView, InstructorDetailView, ConsultationSlotListCreateView, ConsultationSlotDetailView, AvailableSlotListView, ConsultationBookingListCreateView, ConsultationBookingCancelView, StudentBookingHistoryView, InstructorRosterView, AttendanceUpdateView, StudentProfileMetricView, InstructorSlotListCreateView, InstructorSlotDetailView, InstructorBookingListView, InstructorBookingDecisionView, InstructorBookingAttendanceView, InstructorAnalyticsView, InstructorProfileView, SignInView, logoutView, StudentProfileView
 
 urlpatterns = [
     path('auth/sign_in/', SignInView.as_view(), name='sign-in'),
@@ -25,5 +25,6 @@ urlpatterns = [
     path('instructor/me/booking/<int:pk>/attendance', InstructorBookingAttendanceView.as_view(), name='instructor-booking-attendance'),
     path('instructor/me/analytics/', InstructorAnalyticsView.as_view(), name='instructor-analytics'),
     path('instructor/me/profile/', InstructorProfileView.as_view(), name='instructor-profile'),
-    path('auth/logout/', logoutView.as_view(), name='logout')
+    path('auth/logout/', logoutView.as_view(), name='logout'),
+    path('student/me/profile', StudentProfileView.as_view(), name='student-me-profile')
 ]

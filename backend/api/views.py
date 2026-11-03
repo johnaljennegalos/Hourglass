@@ -16,7 +16,7 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 
 
-from .serializers import StudentLoginSerializer, StudentRegistrationSerializer, InstructorLoginSerializer, InstructorRegistrationSerializer, InstructorPublicProfileSerializer, ConsultationSlotSerializer, ConsultationBookingSerializer, ConsultationSlotDetailSerializer, StudentBookingHistorySerializer, InstructorRosterSerializer, AttendanceUpdateSerializer, StudentProfileMetricsSerializer, InstructorBookingDetailSerializer, InstructorBookingDecisionSerializer, InstructorAttendanceSerializer, InstructorAnalyticsSerializer, InstructorSelfProfileSerializer, SignInSerializer
+from .serializers import StudentLoginSerializer, StudentRegistrationSerializer, InstructorLoginSerializer, InstructorRegistrationSerializer, InstructorPublicProfileSerializer, ConsultationSlotSerializer, ConsultationBookingSerializer, ConsultationSlotDetailSerializer, StudentBookingHistorySerializer, InstructorRosterSerializer, AttendanceUpdateSerializer, StudentProfileMetricsSerializer, InstructorBookingDetailSerializer, InstructorBookingDecisionSerializer, InstructorAttendanceSerializer, InstructorAnalyticsSerializer, InstructorSelfProfileSerializer, SignInSerializer, StudentSelfProfileSerializer
 
 from .permissions import IsStudent, IsInstructor
 from .models import User, ConsultationSlot, ConsultationBooking
@@ -428,5 +428,14 @@ class logoutView(APIView):
             return Response({'detail': 'Successfully logged out.'}, status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class StudentProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated, IsStudent]
+    serializer_class = StudentSelfProfileSerializer
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    def get_object(self):
+        return self.request.user
 
 
