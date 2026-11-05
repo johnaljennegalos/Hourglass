@@ -3,6 +3,7 @@ import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
+import 'package:hourglass/models/consultation_booking.dart';
 
 //create equivalent method for every method define in views later
 
@@ -297,8 +298,8 @@ class StudentService {
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> slotHistory = jsonDecode(response.body);
-        return slotHistory;
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((json) => ConsultationBooking.fromJson(json)).toList();
       } else if (response.statusCode == 401 || response.statusCode == 403) {
         print('Forbidden: Role permissions error.');
         return null;
@@ -326,6 +327,7 @@ class StudentService {
 
       final response  = await ApiService.patch(
         '/bookings/$bookingId/cancel/',
+        body: {},
         token: authToken
       );
 
