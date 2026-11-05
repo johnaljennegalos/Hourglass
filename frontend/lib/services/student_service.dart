@@ -280,4 +280,67 @@ class StudentService {
     }
   }
 
+  static Future<List<dynamic>?> getBookingHistory() async {
+
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot fetch history: User is not authenticated.');
+      return null;
+    }
+
+    try {
+
+      final response = await ApiService.get(
+        '/students/me/history/',
+        token: authToken
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> slotHistory = jsonDecode(response.body);
+        return slotHistory;
+      } else if (response.statusCode == 401 || response.statusCode == 403) {
+        print('Forbidden: Role permissions error.');
+        return null;
+      } else {
+        print('Failed to fetch booking history (${response.statusCode}): ${response.body}');
+        return null;
+      }
+
+    } catch (e) {
+      print('Error fetching history: $e');
+      return null;
+    }
+
+  }
+
+  static Future<bool> cancelBooking(int bookingId) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot cancel booking: User is not authenticated.');
+      return false;
+    }
+
+    try {
+
+      final response  = await ApiService.patch(
+        '/bookings/$bookingId/cancel/',
+        token: authToken
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return true;
+      } else {
+        print('Failed to cancel booking (${response.statusCode}): ${response.body}');
+        return false;
+      }
+
+    } catch (e) {
+      print('Error cancelling booking: $e');
+      return false;
+    }
+
+  }
+
 }

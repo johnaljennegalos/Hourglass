@@ -379,6 +379,8 @@ class StudentBookingHistorySerializer(serializers.ModelSerializer):
             'id',
             'slot',
             'status',
+            'reason',
+            'rejection_reason',
             'created_at',
             'is_past_slot',
         ]

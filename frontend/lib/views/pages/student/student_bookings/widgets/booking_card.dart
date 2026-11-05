@@ -18,9 +18,17 @@ class _BookingCardState extends State<BookingCard> {
           children: [
             Row(
               children: [
-                CircleAvatar(),
+                CircleAvatar(
+                  radius: 22,
+                ),
+                Expanded(
+                  child: Column(
+
+                  ),
+                ),
                 //instructors info
                 //status Badge
+                Container()
               ],
             ),
             Row(

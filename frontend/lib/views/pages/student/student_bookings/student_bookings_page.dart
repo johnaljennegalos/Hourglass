@@ -26,11 +26,12 @@ class _StudentBookingsPageState extends State<StudentBookingsPage> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    Center(child: Text('Upcoming / Active')),
+                    Center(child: BookingCard()),
                     Center(child: Text('History')),
                   ],
                 ),
               ),
+              //add a button 'Book new appointment'
             ],
           ),
         ),
