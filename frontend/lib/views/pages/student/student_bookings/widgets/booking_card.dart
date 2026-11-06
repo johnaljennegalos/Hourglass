@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/models/consultation_booking.dart';
 import 'package:hourglass/models/teacher_info.dart';
+import 'package:intl/intl.dart';
 
 class BookingCard extends StatefulWidget {
   final ConsultationBooking booking;
@@ -67,6 +68,69 @@ class _BookingCardState extends State<BookingCard> {
     );
   }
 
+  Widget _buildInfoTile(IconData icon, String text) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          icon,
+          size: 16,
+          color: Colors.grey.shade600,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.grey.shade800,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionsButton() {
+    final status = widget.booking.status.toUpperCase();
+    final canCancel = status == 'PENDING' || status == 'CONFIRMED';
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        TextButton(
+          onPressed: () {
+            //todo
+          },
+          child: const Text('View Details'),
+        ),
+        if(canCancel) ...[
+          const SizedBox(width: 8,),
+          OutlinedButton(
+            onPressed: widget.onCancel,
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.red,
+              side: const BorderSide(color: Colors.red)
+            ),
+            child: const Text('Cancel Booking'),
+          ),
+        ],
+      ],
+    );
+  }
+
+  String _formatTimeString(String rawTime) {
+    try{
+      final parsedData = DateFormat('HH:mm:ss').parse(rawTime);
+      return DateFormat('h:mm a').format(parsedData);
+    } catch (e) {
+      return rawTime;
+    }
+  }
+
+  String _formatTimeRange(String start, String end) {
+    return '${_formatTimeString(start)} - ${_formatTimeString(end)}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final teacher = widget.booking.slot.teacher;
@@ -126,22 +190,45 @@ class _BookingCardState extends State<BookingCard> {
               ],
             ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                //calendar Icon + date
-                //clock icon + time
+                _buildInfoTile(
+                  Icons.calendar_today_outlined,
+                  widget.booking.slot.date
+                ),
+                const SizedBox(width: 16),
+                _buildInfoTile(
+                  Icons.access_time_outlined,
+                  _formatTimeRange(
+                    widget.booking.slot.startTime,
+                    widget.booking.slot.endTime
+                  )
+                )
               ],
             ),
             Divider(),
             Row(
               children: [
-                //message icon
-                //consultation reason
+                _buildInfoTile(
+                  Icons.message_outlined,
+                  widget.booking.reason ?? 'No reason provided',
+                ),
+                if (widget.booking.status.toUpperCase() == 'REJECTED' ||
+                    widget.booking.status.toUpperCase() == 'CANCELLED')
+                  _buildInfoTile(
+                    Icons.cancel_sharp,
+                    (widget.booking.rejectionReason != null && widget.booking.rejectionReason!.trim().isNotEmpty)
+                        ? widget.booking.rejectionReason!
+                        : 'No rejection reason provided',
+                  ),
               ],
             ),
             Row(
               children: [
                 //view details button
                 //Cancel Booking button (optional)
+                const SizedBox(height: 12),
+                _buildActionsButton()
               ],
             )
           ],
