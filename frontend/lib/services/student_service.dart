@@ -281,7 +281,7 @@ class StudentService {
     }
   }
 
-  static Future<List<dynamic>?> getBookingHistory() async {
+  static Future<List<ConsultationBooking>?> getBookingHistory() async {
 
     String? authToken = AuthService.accessToken;
 
