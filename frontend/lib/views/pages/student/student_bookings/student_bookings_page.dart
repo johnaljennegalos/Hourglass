@@ -26,7 +26,7 @@ class _StudentBookingsPageState extends State<StudentBookingsPage> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    Center(child: BookingCard()),
+                    Center(child: BookingCard(booking: ,)),
                     Center(child: Text('History')),
                   ],
                 ),
