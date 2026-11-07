@@ -342,8 +342,8 @@ class InstructorBookingDetailSerializer(serializers.ModelSerializer):
             'slot_date',
             'slot_start_time',
             'slot_end_time',
-            'slot_location'
-            'student_avatar'
+            'slot_location',
+            'student_avatar',
         ]
 
         read_only_fields = fields
