@@ -99,7 +99,191 @@ class _BookingCardState extends State<BookingCard> {
       children: [
         TextButton(
           onPressed: () {
-            //todo
+            showDialog(
+              barrierDismissible: true,
+              context: context,
+              builder: (ctx) {
+                return AlertDialog(
+                  backgroundColor: Colors.white,
+                  surfaceTintColor: Colors.transparent,
+                  insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  titlePadding: const EdgeInsets.fromLTRB(20, 20, 12, 8),
+                  contentPadding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+                  actionsPadding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+
+                  title: Row(
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          'Booking Details',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E293B),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.close_rounded),
+                        color: Colors.grey,
+                        tooltip: 'Close',
+                      ),
+                    ],
+                  ),
+
+                  content: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildStatusBadge(),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF8FAFC),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: const Color(0xFFE2E8F0),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              _buildTeacherAvatar(widget.booking.slot.teacher),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.booking.slot.teacher.fullName,
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xFF1E293B),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      widget.booking.slot.teacher.department,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFF64748B),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      widget.booking.slot.teacher.specialization,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFF64748B),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'Schedule Information',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF1E293B),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        _buildInfoTile(
+                          Icons.calendar_today_outlined,
+                          widget.booking.slot.date,
+                        ),
+                        const SizedBox(height: 12),
+                        _buildInfoTile(
+                          Icons.access_time_rounded,
+                          _formatTimeRange(
+                            widget.booking.slot.startTime,
+                            widget.booking.slot.endTime,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        _buildInfoTile(
+                          Icons.location_on_outlined,
+                          widget.booking.slot.location,
+                        ),
+                        const SizedBox(height: 12),
+                        _buildInfoTile(
+                          Icons.people_alt_outlined,
+                          'Max Capacity: ${widget.booking.slot.maxCapacity}',
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'Consultation Details',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF1E293B),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEFF6FF),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: const Color(0xFFDBEAFE),
+                            ),
+                          ),
+                          child: Text(
+                            widget.booking.reason ?? 'No reason provided',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              height: 1.5,
+                              color: Color(0xFF334155),
+                            ),
+                          ),
+                        ),
+
+                        // Rejection details
+                        // Only display this when the booking is declined.
+                        // _buildRejectionTile(),
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF2563EB),
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 13),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Close',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            );
           },
           child: const Text('View Details'),
         ),
