@@ -3,6 +3,7 @@ import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
+import 'package:hourglass/models/consultation_booking.dart';
 
 //create equivalent method for every method define in views later
 
@@ -278,6 +279,70 @@ class StudentService {
       print('Exception during avatar upload: $e');
       return false;
     }
+  }
+
+  static Future<List<ConsultationBooking>?> getBookingHistory() async {
+
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot fetch history: User is not authenticated.');
+      return null;
+    }
+
+    try {
+
+      final response = await ApiService.get(
+        '/students/me/history/',
+        token: authToken
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((json) => ConsultationBooking.fromJson(json)).toList();
+      } else if (response.statusCode == 401 || response.statusCode == 403) {
+        print('Forbidden: Role permissions error.');
+        return null;
+      } else {
+        print('Failed to fetch booking history (${response.statusCode}): ${response.body}');
+        return null;
+      }
+
+    } catch (e) {
+      print('Error fetching history: $e');
+      return null;
+    }
+
+  }
+
+  static Future<bool> cancelBooking(int bookingId) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot cancel booking: User is not authenticated.');
+      return false;
+    }
+
+    try {
+
+      final response  = await ApiService.patch(
+        '/bookings/$bookingId/cancel/',
+        body: {},
+        token: authToken
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return true;
+      } else {
+        print('Failed to cancel booking (${response.statusCode}): ${response.body}');
+        return false;
+      }
+
+    } catch (e) {
+      print('Error cancelling booking: $e');
+      return false;
+    }
+
   }
 
 }
