@@ -8,6 +8,10 @@ class ConsultationBooking {
   final bool isPastSlot;
   final String? reason;
   final String? rejectionReason;
+  final String firstName;
+  final String lastName;
+  final String studentEmail;
+  final String? studentAvatar;
 
   bool get isCancellable =>
       !isPastSlot && (status == 'PENDING' || status == 'CONFIRMED');
@@ -20,6 +24,10 @@ class ConsultationBooking {
     required this.isPastSlot,
     this.reason,
     this.rejectionReason,
+    required this.firstName,
+    required this.lastName,
+    this.studentAvatar,
+    required this.studentEmail,
   });
 
   factory ConsultationBooking.fromJson(Map<String, dynamic> json) {
@@ -31,6 +39,10 @@ class ConsultationBooking {
       isPastSlot: json['is_past_slot'] ?? false,
       reason: json['reason'],
       rejectionReason: json['rejection_reason'],
+      firstName: json['first_name'] ?? '',
+      lastName: json['last_name'] ?? '',
+      studentEmail: json['email'] ?? '',
+      studentAvatar: json['student_avatar'],
     );
   }
 
