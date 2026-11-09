@@ -294,7 +294,7 @@ class InstructorService {
     try{
 
       final response = await ApiService.patch(
-        'instructor/bookings/$id/decision/',
+        '/instructor/bookings/$id/decision/',
         body: {'status' : 'CONFIRMED'},
         token: authToken,
       );
@@ -306,6 +306,31 @@ class InstructorService {
 
     } catch (e) {
       print('Error approving student bookings: $e');
+      return false;
+    }
+  }
+
+  Future<bool> markAttendance(id) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot mark attendance: User is not authenticated.');
+      return false;
+    }
+
+    try {
+      final response = await ApiService.patch(
+        'instructor/me/booking/$id/attendance/',
+        body: {'status' : 'COMPLETED'},
+        token: authToken,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Error marking attendance: $e');
       return false;
     }
   }
