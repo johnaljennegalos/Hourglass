@@ -3,6 +3,7 @@ import 'package:hourglass/views/pages/instructor/instructor_slot.dart';
 import 'package:hourglass/views/pages/instructor/profile/instructor_profile.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
+import 'package:hourglass/views/pages/instructor/instructor_bookings/instructor_booking_page.dart';
 
 
 class InstructorDashboard extends StatefulWidget {
@@ -18,10 +19,9 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
 
   final List<Widget> _pages = [
     const Center(child: Text('Notifs Page')),
-    const Center(child: Text('Bookings Page')),
+    const Center(child: InstructorBookingPage()),
     const Center(child: InstructorSlot()),
     const Center(child: InstructorProfile()),
-    const Center(child: Text('Settings Page')),
   ];
 
   @override

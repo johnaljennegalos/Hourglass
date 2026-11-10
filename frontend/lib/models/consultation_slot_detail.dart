@@ -29,9 +29,8 @@ class ConsultationSlotDetail {
         startTime: json['start_time'] ?? '',
         endTime: json['end_time'] ?? '',
         location: json['location'] ?? '',
-        maxCapacity: json['max_capacity'] ?? '',
+        maxCapacity: json['max_capacity'] ?? 0,
     );
   }
-
 
 }

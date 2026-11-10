@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:hourglass/models/consultation_booking.dart';
+
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import 'package:http/http.dart' as http;
@@ -249,6 +251,124 @@ class InstructorService {
       }
     } catch (e) {
       print('Exception during avatar upload: $e');
+      return false;
+    }
+  }
+
+
+  Future<List<ConsultationBooking>?> getInstructorBookings({String? status}) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot get instructors bookings: User is not authenticated.');
+      print('DEBUG: getInstructorBookings failed -> No auth token found.');
+      return null;
+    }
+
+    try{
+      String endpoint = '/instructor/bookings/';
+      if(status != null && status.isNotEmpty) {
+        endpoint += '?status=$status';
+      }
+
+      final response = await ApiService.get(endpoint, token: authToken);
+
+      print('DEBUG: Response Status Code = ${response.statusCode}');
+      print('DEBUG: Response Body = ${response.body}');
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((json) => ConsultationBooking.fromJson(json)).toList();
+      }
+      print('DEBUG: Request failed with status ${response.statusCode}');
+      return null;
+    } catch (e, stacktrace) {
+      print('Error fetching instructor bookings: $e');
+      print('Stacktrace: $stacktrace');
+      return null;
+    }
+  }
+
+  Future<bool> approveBooking(id) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot approve booking: User is not authenticated.');
+      return false;
+    }
+
+    try{
+
+      final response = await ApiService.patch(
+        '/instructor/bookings/$id/decision/',
+        body: {'status' : 'CONFIRMED'},
+        token: authToken,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      }
+      return false;
+
+    } catch (e) {
+      print('Error approving student bookings: $e');
+      return false;
+    }
+  }
+
+  Future<bool> markAttendance(id) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot mark attendance: User is not authenticated.');
+      return false;
+    }
+
+    try {
+      final response = await ApiService.patch(
+        '/instructor/me/booking/$id/attendance/',
+        body: {'status' : 'COMPLETED'},
+        token: authToken,
+      );
+
+      print('DEBUG markAttendance Code: ${response.statusCode}');
+      print('DEBUG markAttendance Body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Error marking attendance: $e');
+      return false;
+    }
+  }
+
+  Future<bool> rejectBooking(id, reason) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot approve booking: User is not authenticated.');
+      return false;
+    }
+
+    try {
+      final response = await ApiService.patch(
+        'instructor/bookings/$id/decision/',
+        token: authToken,
+        body: {
+          'status': 'REJECTED',
+          'rejection_reason': reason.trim(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+
+    } catch (e) {
+      print('Error rejecting student booking: $e');
       return false;
     }
   }
