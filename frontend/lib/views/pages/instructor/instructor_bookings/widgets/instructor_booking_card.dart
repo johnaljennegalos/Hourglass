@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/models/consultation_booking.dart';
+import 'package:intl/intl.dart';
 
 class InstructorBookingCard extends StatefulWidget {
   final ConsultationBooking booking;
@@ -43,6 +44,15 @@ class _InstructorBookingCardState extends State<InstructorBookingCard> {
         return Colors.red.shade900;
       default:
         return Colors.grey.shade800;
+    }
+  }
+
+  String formatTimeIntl(String timeStr) {
+    try {
+      final DateTime parsedTime = DateFormat('HH:mm:ss').parse(timeStr);
+      return DateFormat('h:mm a').format(parsedTime); // e.g. "1:00 PM"
+    } catch (e) {
+      return timeStr;
     }
   }
 
@@ -118,7 +128,7 @@ class _InstructorBookingCardState extends State<InstructorBookingCard> {
                     const SizedBox(width: 8,),
                     Expanded(
                       child: Text(
-                        '${widget.booking.slot.date} • ${widget.booking.slot.startTime} - ${widget.booking.slot.endTime}',
+                        '${widget.booking.slot.date} • ${formatTimeIntl(widget.booking.slot.startTime)} - ${formatTimeIntl(widget.booking.slot.endTime)}',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.black87

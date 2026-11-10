@@ -326,10 +326,13 @@ class InstructorService {
 
     try {
       final response = await ApiService.patch(
-        'instructor/me/booking/$id/attendance/',
+        '/instructor/me/booking/$id/attendance/',
         body: {'status' : 'COMPLETED'},
         token: authToken,
       );
+
+      print('DEBUG markAttendance Code: ${response.statusCode}');
+      print('DEBUG markAttendance Body: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;

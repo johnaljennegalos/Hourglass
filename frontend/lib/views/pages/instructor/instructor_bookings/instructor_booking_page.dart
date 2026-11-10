@@ -48,7 +48,7 @@ class _InstructorBookingPageState extends State<InstructorBookingPage> with Sing
                 _pendingBookings.add(book);
               } else if (book.status.trim().toUpperCase() == 'CONFIRMED') {
                 _confirmedBookings.add(book);
-              } else if (['COMPLETED', 'REJECTED', 'CANCELLED'].contains(book.status.toUpperCase())) {
+              } else if (['COMPLETED', 'REJECTED', 'CANCELLED', 'NO SHOW', 'ATTENDED'].contains(book.status.toUpperCase())) {
                 _historyBookings.add(book);
               }
           }
@@ -170,30 +170,25 @@ class _InstructorBookingPageState extends State<InstructorBookingPage> with Sing
   }
 
 
-  Future<void> _handleMarkAttendance(ConsultationBooking booking) async {
+Future<void> _handleMarkAttendance(ConsultationBooking booking) async {
+    final success = await _instructorService.markAttendance(booking.id);
 
-    try {
+    if (!mounted) return;
 
-      await _instructorService.markAttendance(booking.id);
-
-      if (!mounted) return;
-
+    if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Attendance marked successfully')),
       );
 
-      _fetchBookings();
+      await _fetchBookings();
 
-    } catch (e) {
-
-      if (!mounted) return;
+      _tabController.animateTo(2);
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to mark attendance: $e')),
+        const SnackBar(content: Text('Failed to mark attendance. Check logs.')),
       );
-
     }
-
-  }
+}
 
   Widget _buildBookingList({
     required List<ConsultationBooking> bookings,
@@ -251,42 +246,43 @@ class _InstructorBookingPageState extends State<InstructorBookingPage> with Sing
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            children: [
-              const TabBar(
-                tabs: [
-                  Tab(text: 'PENDING'),
-                  Tab(text: 'CONFIRMED'),
-                  Tab(text: 'HISTORY'),
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            TabBar(
+              controller: _tabController,
+              tabs: const [
+                Tab(text: 'PENDING'),
+                Tab(text: 'CONFIRMED'),
+                Tab(text: 'HISTORY'),
+              ],
+            ),
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildBookingList(
+                    bookings: _pendingBookings,
+                    emptyMessage: 'No pending bookings.',
+                    tabType: 'PENDING',
+                  ),
+                  _buildBookingList(
+                    bookings: _confirmedBookings,
+                    emptyMessage: 'No confirmed bookings.',
+                    tabType: 'CONFIRMED',
+                  ),
+                  _buildBookingList(
+                    bookings: _historyBookings,
+                    emptyMessage: 'No booking history available.',
+                    tabType: 'HISTORY',
+                  ),
                 ],
               ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    _buildBookingList(
-                      bookings: _pendingBookings,
-                      emptyMessage: 'No pending bookings.',
-                      tabType: 'PENDING',
-                    ),
-                    _buildBookingList(
-                      bookings: _confirmedBookings,
-                      emptyMessage: 'No confirmed bookings.',
-                      tabType: 'CONFIRMED',
-                    ),
-                    _buildBookingList(
-                      bookings: _historyBookings,
-                      emptyMessage: 'No booking history available.',
-                      tabType: 'HISTORY',
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

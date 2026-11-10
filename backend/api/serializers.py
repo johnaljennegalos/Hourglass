@@ -742,15 +742,16 @@ class InstructorAttendanceSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         booking = self.instance
-        current_date = timezone.now().date()
-        current_time = timezone.now().time()
+        now_local = timezone.localtime(timezone.now())
+        current_date = now_local.date()
+        current_time = now_local.time()
 
         if booking.status != 'CONFIRMED':
             raise serializers.ValidationError({'status' : 'Attendance can only be marked for confirmed.'})
 
         slot = booking.slot
         is_past_date = slot.date < current_date
-        is_past_time_today = slot.date == current_date and slot.end_time <= current_time
+        is_past_time_today = (slot.date == current_date) and (slot.end_time <= current_time)
 
         if not (is_past_date or is_past_time_today):
             raise serializers.ValidationError({'status' : 'Cannot mark attendance for a consultation that has not concluded yet.'})
