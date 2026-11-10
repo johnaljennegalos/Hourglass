@@ -261,24 +261,30 @@ class InstructorService {
 
     if (authToken == null){
       print('Cannot get instructors bookings: User is not authenticated.');
+      print('DEBUG: getInstructorBookings failed -> No auth token found.');
       return null;
     }
 
     try{
-      String endpoint = 'instructor/bookings/';
+      String endpoint = '/instructor/bookings/';
       if(status != null && status.isNotEmpty) {
         endpoint += '?status=$status';
       }
 
       final response = await ApiService.get(endpoint, token: authToken);
 
+      print('DEBUG: Response Status Code = ${response.statusCode}');
+      print('DEBUG: Response Body = ${response.body}');
+
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         return data.map((json) => ConsultationBooking.fromJson(json)).toList();
       }
+      print('DEBUG: Request failed with status ${response.statusCode}');
       return null;
-    } catch (e) {
+    } catch (e, stacktrace) {
       print('Error fetching instructor bookings: $e');
+      print('Stacktrace: $stacktrace');
       return null;
     }
   }

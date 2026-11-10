@@ -1,4 +1,5 @@
 import 'package:hourglass/models/consultation_slot_detail.dart';
+import 'package:hourglass/models/teacher_info.dart';
 
 class ConsultationBooking {
   final int id;
@@ -31,9 +32,33 @@ class ConsultationBooking {
   });
 
   factory ConsultationBooking.fromJson(Map<String, dynamic> json) {
+    ConsultationSlotDetail slotDetail;
+
+    if (json['slot'] is Map<String, dynamic>) {
+      slotDetail = ConsultationSlotDetail.fromJson(json['slot']);
+    } else {
+      slotDetail = ConsultationSlotDetail(
+        id: json['slot'] is int ? json['slot'] : 0,
+        date: json['slot_date'] ?? '',
+        startTime: json['slot_start_time'] ?? '',
+        endTime: json['slot_end_time'] ?? '',
+        location: json['slot_location'] ?? '',
+        teacher: TeacherInfo(
+          id: 0,
+          firstName: '',
+          lastName: '',
+          email: '',
+          department: '',
+          specialization: '',
+          avatarUrl: null,
+        ),
+        maxCapacity: json['max_capacity'] ?? 1,
+      );
+    }
+
     return ConsultationBooking(
       id: json['id'] ?? 0,
-      slot: ConsultationSlotDetail.fromJson(json['slot'] ?? {}),
+      slot: slotDetail,
       status: json['status'] ?? 'PENDING',
       createdAt: json['created_at'] ?? '',
       isPastSlot: json['is_past_slot'] ?? false,
@@ -41,7 +66,7 @@ class ConsultationBooking {
       rejectionReason: json['rejection_reason'],
       firstName: json['first_name'] ?? '',
       lastName: json['last_name'] ?? '',
-      studentEmail: json['email'] ?? '',
+      studentEmail: json['student_email'] ?? json['email'] ?? '',
       studentAvatar: json['student_avatar'],
     );
   }

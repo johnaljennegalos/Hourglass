@@ -26,9 +26,16 @@ class _InstructorBookingPageState extends State<InstructorBookingPage> with Sing
     });
 
     try{
-      if (!mounted) return;
 
       final bookings = await _instructorService.getInstructorBookings();
+      print('RAW BOOKINGS FETCHED: ${bookings?.length}');
+      if (bookings != null) {
+        for (var b in bookings) {
+          print('BOOKING ID: ${b.id}, STATUS: "${b.status}"');
+        }
+      }
+
+      if (!mounted) return;
 
       setState(() {
         _pendingBookings.clear();
@@ -37,9 +44,9 @@ class _InstructorBookingPageState extends State<InstructorBookingPage> with Sing
 
           if (bookings != null && bookings.isNotEmpty){
             for (var book in bookings) {
-              if (book.status.toUpperCase() == 'PENDING') {
+              if (book.status.trim().toUpperCase() == 'PENDING') {
                 _pendingBookings.add(book);
-              } else if (book.status.toUpperCase() == 'CONFIRMED') {
+              } else if (book.status.trim().toUpperCase() == 'CONFIRMED') {
                 _confirmedBookings.add(book);
               } else if (['COMPLETED', 'REJECTED', 'CANCELLED'].contains(book.status.toUpperCase())) {
                 _historyBookings.add(book);
@@ -57,7 +64,7 @@ class _InstructorBookingPageState extends State<InstructorBookingPage> with Sing
       );
 
     } finally {
-      if (!mounted) {
+      if (mounted) {
         setState(() {
           _isLoading = false;
         });
@@ -104,7 +111,7 @@ class _InstructorBookingPageState extends State<InstructorBookingPage> with Sing
                   onPressed: _reasonInput.text.trim().isNotEmpty
                       ? () {
                     String enteredText = _reasonInput.text.trim();
-                    Navigator.pop(context, enteredText);
+                    Navigator.pop(dialogContext, enteredText);
                   }
                       : null,
                   child: const Text('Submit'),
@@ -188,6 +195,47 @@ class _InstructorBookingPageState extends State<InstructorBookingPage> with Sing
 
   }
 
+  Widget _buildBookingList({
+    required List<ConsultationBooking> bookings,
+    required String emptyMessage,
+    required String tabType,
+  }) {
+    if (bookings.isEmpty) {
+      return RefreshIndicator(
+        onRefresh: _fetchBookings,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            alignment: Alignment.center,
+            child: Text(
+              emptyMessage,
+              style: TextStyle(color: Colors.grey[600], fontSize: 16),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: _fetchBookings,
+      child: ListView.builder(
+        padding: const EdgeInsets.all(12.0),
+        itemCount: bookings.length,
+        itemBuilder: (context, index) {
+          final booking = bookings[index];
+          return InstructorBookingCard(
+            booking: booking,
+            onApprove: tabType == 'PENDING' ? () => _handleApprove(booking) : null,
+            onReject: tabType == 'PENDING' ? () => _handleReject(booking) : null,
+            onMarkAttendance:
+            tabType == 'CONFIRMED' ? () => _handleMarkAttendance(booking) : null,
+          );
+        },
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -219,9 +267,21 @@ class _InstructorBookingPageState extends State<InstructorBookingPage> with Sing
               Expanded(
                 child: TabBarView(
                   children: [
-                    Center(child: Text('PENDING')),
-                    Center(child: Text('CONFIRMED')),
-                    Center(child: Text('HISTORY')),
+                    _buildBookingList(
+                      bookings: _pendingBookings,
+                      emptyMessage: 'No pending bookings.',
+                      tabType: 'PENDING',
+                    ),
+                    _buildBookingList(
+                      bookings: _confirmedBookings,
+                      emptyMessage: 'No confirmed bookings.',
+                      tabType: 'CONFIRMED',
+                    ),
+                    _buildBookingList(
+                      bookings: _historyBookings,
+                      emptyMessage: 'No booking history available.',
+                      tabType: 'HISTORY',
+                    ),
                   ],
                 ),
               ),
