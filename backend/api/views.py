@@ -16,10 +16,10 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 
 
-from .serializers import StudentLoginSerializer, StudentRegistrationSerializer, InstructorLoginSerializer, InstructorRegistrationSerializer, InstructorPublicProfileSerializer, ConsultationSlotSerializer, ConsultationBookingSerializer, ConsultationSlotDetailSerializer, StudentBookingHistorySerializer, InstructorRosterSerializer, AttendanceUpdateSerializer, StudentProfileMetricsSerializer, InstructorBookingDetailSerializer, InstructorBookingDecisionSerializer, InstructorAttendanceSerializer, InstructorAnalyticsSerializer, InstructorSelfProfileSerializer, SignInSerializer, StudentSelfProfileSerializer
+from .serializers import StudentLoginSerializer, StudentRegistrationSerializer, InstructorLoginSerializer, InstructorRegistrationSerializer, InstructorPublicProfileSerializer, ConsultationSlotSerializer, ConsultationBookingSerializer, ConsultationSlotDetailSerializer, StudentBookingHistorySerializer, InstructorRosterSerializer, AttendanceUpdateSerializer, StudentProfileMetricsSerializer, InstructorBookingDetailSerializer, InstructorBookingDecisionSerializer, InstructorAttendanceSerializer, InstructorAnalyticsSerializer, InstructorSelfProfileSerializer, SignInSerializer, NotificationSerializer, StudentSelfProfileSerializer, NotificationMarkReadSerializer
 
 from .permissions import IsStudent, IsInstructor
-from .models import User, ConsultationSlot, ConsultationBooking
+from .models import User, ConsultationSlot, ConsultationBooking, Notification
 
 
 class SignInView(APIView):
@@ -437,5 +437,44 @@ class StudentProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+
+
+class NotificationListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = NotificationSerializer
+
+    def get_queryset(self):
+        return Notification.objects.filter(recipient=self.request.user).select_related('booking__slot', 'booking__slot__teacher')
+
+
+class NotificationUnreadCountView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        count = Notification.objects.filter(recipient=request.user, is_read=False).count()
+
+        return Response({'unread_count': count}, status=status.HTTP_200_OK)
+
+
+class NotificationMarkReadView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = NotificationMarkReadSerializer
+    http_method_names = ['patch', 'put']
+
+    def get_queryset(self):
+        return Notification.objects.filter(recipient=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(is_read=True)
+
+
+class NotificationMarkAllReadView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        updated_count = Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
+        return Response({'detail': 'All notifications marked as read.', 'updated_count': updated_count}, status=status.HTTP_200_OK)
 
 
