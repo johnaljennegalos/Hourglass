@@ -66,4 +66,62 @@ class NotificationService {
       return 0;
     }
   }
+
+  Future<bool> markAsRead(int notificationId) async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot mark as read: User is not authenticated.');
+      return false;
+    }
+
+    try {
+
+      final response = await ApiService.patch(
+        '/notifications/$notificationId/read/',
+        body: {'is_read': true},
+        token: authToken
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+
+    } catch (e) {
+      print('An error occurred while marking as read: $e');
+      return false;
+    }
+  }
+
+
+  Future<bool> markAllAsRead() async {
+    String? authToken = AuthService.accessToken;
+
+    if (authToken == null){
+      print('Cannot marking all as read: User is not authenticated.');
+      return false;
+    }
+
+    try {
+
+      final response = await ApiService.post(
+        '/notifications/mark-all-read/',
+        body: {},
+        token: authToken
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+
+    } catch (e) {
+      print('An error occurred while marking all as read: $e');
+      return false;
+    }
+
+  }
 }
