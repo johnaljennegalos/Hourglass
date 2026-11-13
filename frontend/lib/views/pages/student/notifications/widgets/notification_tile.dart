@@ -11,9 +11,10 @@ class NotificationTile extends StatelessWidget {
   String _formatTimeAgo(DateTime datetime) {
     final diff = DateTime.now().difference(datetime);
     if (diff.inMinutes < 1) return 'Just now';
-    if (diff.inMinutes < 60) return '{diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '{diff.inHours}h ago';
-    if (diff.inDays < 7) return '{diff.inDays}d ago';
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
+    if (diff.inHours < 24) return '${diff.inHours}h ago';
+    if (diff.inDays < 7) return '${diff.inDays}d ago';
+    if (diff.inDays > 7) return '${datetime.month}/${datetime.day}/${datetime.year}';
   }
 
   @override
@@ -40,13 +41,14 @@ class NotificationTile extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundColor: isUnread ? primaryColor.withValues(alpha: 0.25) : Colors.grey,
+                backgroundColor: isUnread ? primaryColor.withValues(alpha: 0.25) : Colors.grey.withValues(alpha: 0.15),
                 child: Icon(
                   notification.bookingDetails != null ? Icons.calendar_today : Icons.notifications_none,
                   size: 20,
                   color: isUnread ? primaryColor : Colors.grey[600],
                 ),
               ),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,24 +76,24 @@ class NotificationTile extends StatelessWidget {
                         if (isUnread) ...[
                           SizedBox(width: 6,),
                           Container(
-                            width: 48.0,
-                            height: 48.0,
+                            width: 8.0,
+                            height: 8.0,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: primaryColor,
                             ),
                           ),
                         ],
-                        SizedBox(height: 4),
-                        Text(
-                          notification.message,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.grey[700]
-                          ),
-                        ),
                       ],
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      notification.message,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: Colors.grey[700]
+                      ),
                     ),
                     if (notification.bookingDetails != null) ...[
                       SizedBox(height: 8,),
