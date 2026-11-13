@@ -14,7 +14,7 @@ class NotificationTile extends StatelessWidget {
     if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
     if (diff.inHours < 24) return '${diff.inHours}h ago';
     if (diff.inDays < 7) return '${diff.inDays}d ago';
-    if (diff.inDays > 7) return '${datetime.month}/${datetime.day}/${datetime.year}';
+    return '${datetime.month}/${datetime.day}/${datetime.year}';
   }
 
   @override
@@ -70,7 +70,7 @@ class NotificationTile extends StatelessWidget {
                           _formatTimeAgo(notification.createdAt),
                           style: TextStyle(
                             fontSize: 12,
-                            color: primaryColor
+                            color: isUnread ? primaryColor : Colors.grey[500]
                           ),
                         ),
                         if (isUnread) ...[
@@ -114,7 +114,7 @@ class NotificationTile extends StatelessWidget {
                             const SizedBox(width: 6),
                             Flexible(
                               child: Text(
-                                '${notification.bookingDetails!.id ?? 'Session'} • ${notification.bookingDetails!.status ?? ''}',
+                                'Booking #${notification.bookingDetails!.slotDate} • ${notification.bookingDetails!.status}',
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
