@@ -104,8 +104,74 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
     }
   }
 
+  Widget _buildBody() {
+    if (_isLoading){
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_errorMessage != null) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(_errorMessage!),
+          ElevatedButton(
+            onPressed: _loadNotifications,
+            child: const Text('Retry'),
+          )
+        ],
+      );
+    }
+
+
+    if(_notifications.isEmpty) {
+      return RefreshIndicator(
+        onRefresh: _loadNotifications,
+        child: ListView(
+          children: const [
+            SizedBox(height: 160),
+            Icon(Icons.notifications_none, size: 64, color: Colors.grey),
+            SizedBox(height: 12),
+            Center(child: Text('No notifications yet')),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: _loadNotifications,
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        itemCount: _notifications.length,
+        itemBuilder: (context, index) {
+          final notification = _notifications[index];
+          return NotificationTile(
+            notification: notification,
+            onTap: () => _handleNotificationTap(notification),
+          );
+        },
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    final hasUnread = _notifications.any((n) => !n.isRead);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Notifications'),
+        actions: [
+          if (hasUnread) ...[
+            TextButton(
+              onPressed: _handleMarkAllAsRead,
+              child: const Text('Mark all as read'),
+            )
+          ]
+        ],
+      ),
+      body: _buildBody(),
+    );
   }
 }

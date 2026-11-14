@@ -200,17 +200,37 @@ class ConsultationBookingListCreateView(generics.ListCreateAPIView):
         return ConsultationBooking.objects.filter(student=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(student=self.request.user)
+        booking = serializer.save(student=self.request.user)
+        slot = booking.slot
+        Notification.objects.create(
+            recipient=slot.teacher,
+            booking=booking,
+            title='New Consultation Request',
+            message=(
+                f"{booking.student.first_name} {booking.student.last_name} "
+                f"requested a consultation on {slot.date} at {slot.start_time.strftime('%I:%M %p')}."
+            ),
+        )
 
 class ConsultationBookingCancelView(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated, IsStudent]
     serializer_class = ConsultationBookingSerializer
 
     def get_queryset(self):
-        return ConsultationBooking.objects.filter(student=self.request.user, status__in=['PENDING', 'CONFIRMED'])
+        return ConsultationBooking.objects.filter(student=self.request.user, status__in=['PENDING', 'CONFIRMED']).select_related('slot')
 
     def perform_update(self, serializer):
-        serializer.save(status='CANCELLED')
+        booking = serializer.save(status='CANCELLED')
+        slot = booking.slot
+        Notification.objects.create(
+            recipient=slot.teacher,
+            booking=booking,
+            title="Booking Cancelled",
+            message=(
+                f"{booking.student.first_name} {booking.student.last_name} "
+                f"cancelled their consultation on {slot.date} at {slot.start_time.strftime('%I:%M %p')}."
+            ),
+        )
 
 
 class StudentBookingHistoryView(generics.ListAPIView):
@@ -313,7 +333,28 @@ class InstructorBookingDecisionView(generics.UpdateAPIView):
     http_method_names = ['patch']
 
     def get_queryset(self):
-        return ConsultationBooking.objects.filter(slot__teacher=self.request.user, slot__is_deleted=False, status='PENDING').select_related('slot')
+        return ConsultationBooking.objects.filter(slot__teacher=self.request.user, slot__is_deleted=False, status='PENDING').select_related('slot', 'student')
+
+    def perform_update(self, serializer):
+        booking = serializer.save()
+        slot = booking.slot
+        teacher_name = f'{slot.teacher.first_name} {slot.teacher.last_name}'
+
+        if booking.status == 'CONFIRMED':
+            Notification.objects.create(
+                recipient=booking.student,
+                booking=booking,
+                title="Booking Confirmed",
+                message=f"Your consultation with {teacher_name} on {slot.date} at {slot.start_time.strftime('%I:%M %p')} has been confirmed.",
+            )
+        elif booking.status == 'REJECTED':
+            Notification.objects.create(
+                recipient=booking.student,
+                booking=booking,
+                title="Booking Declined",
+                message=f"Your consultation with {teacher_name} on {slot.date} was declined. Reason: {booking.rejection_reason}",
+            )
+
 
 
 class InstructorBookingAttendanceView(generics.UpdateAPIView):
@@ -322,7 +363,27 @@ class InstructorBookingAttendanceView(generics.UpdateAPIView):
     http_method_names = ['patch']
 
     def get_queryset(self):
-        return ConsultationBooking.objects.filter(slot__teacher=self.request.user)
+        return ConsultationBooking.objects.filter(slot__teacher=self.request.user).select_related('slot', 'student')
+
+    def perform_update(self, serializer):
+        booking = serializer.save()
+        slot = booking.slot
+        teacher_name = f"{slot.teacher.first_name} {slot.teacher.last_name}"
+
+        if booking.status == 'COMPLETED':
+            Notification.objects.create(
+                recipient=booking.student,
+                booking=booking,
+                title="Consultation Completed",
+                message=f"Your consultation with {teacher_name} on {slot.date} has been marked as completed.",
+            )
+        elif booking.status == 'NO SHOW':
+            Notification.objects.create(
+                recipient=booking.student,
+                booking=booking,
+                title="Marked as No Show",
+                message=f"You were marked as a no-show for your consultation with {teacher_name} on {slot.date}.",
+            )
 
     def partial_update(self, request, *args, **kwargs):
         instance = self.get_object()

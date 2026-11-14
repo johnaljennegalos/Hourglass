@@ -520,27 +520,27 @@ class AttendanceUpdateSerializer(serializers.ModelSerializer):
 #         ]
 
 #both for student and instructors UI, also both for GET or PATCH
-class NotificationSerializer(serializers.ModelSerializer):
-    booking = ConsultationSlotDetailSerializer(read_only=True)
-
-    class Meta:
-        model = Notification
-        fields = [
-            'id',
-            'recipient',
-            'booking',
-            'title',
-            'message',
-            'is_read',
-            'created_at'
-        ]
-
-        extra_kwargs = {
-            'recipient' : {'read_only' : True},
-            'title' : {'read_only' : True},
-            'message' : {'read_only' : True},
-            # 'is_read' : {'read_only' : True}
-        }
+# class NotificationSerializer(serializers.ModelSerializer):
+#     booking = ConsultationSlotDetailSerializer(read_only=True)
+#
+#     class Meta:
+#         model = Notification
+#         fields = [
+#             'id',
+#             'recipient',
+#             'booking',
+#             'title',
+#             'message',
+#             'is_read',
+#             'created_at'
+#         ]
+#
+#         extra_kwargs = {
+#             'recipient' : {'read_only' : True},
+#             'title' : {'read_only' : True},
+#             'message' : {'read_only' : True},
+#             # 'is_read' : {'read_only' : True}
+#         }
 
 
 class ChangePasswordSerializer(serializers.Serializer):

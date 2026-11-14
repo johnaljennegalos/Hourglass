@@ -20,6 +20,9 @@ class NotificationService {
         token: authToken
       );
 
+      print('NOTIF STATUS: ${list.statusCode}');
+      print('NOTIF BODY: ${list.body}');
+
       if (list.statusCode == 200 || list.statusCode == 201) {
         final List<dynamic> notificationList = jsonDecode(list.body);
         return notificationList.map((json) => NotificationModel.fromJson(json)).toList();

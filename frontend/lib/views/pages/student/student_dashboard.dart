@@ -5,6 +5,7 @@ import 'package:hourglass/views/pages/student/book_slot/book_slot.dart';
 import 'package:hourglass/views/pages/student/home/student_home.dart';
 import 'package:hourglass/views/pages/student/profile/student_profile.dart';
 import 'package:hourglass/views/pages/student/student_bookings/student_bookings_page.dart';
+import 'package:hourglass/views/pages/student/notifications/student_notifications_page.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -23,7 +24,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
     const Center(child: StudentHome()),
     const Center(child: BookSlot()),
     const Center(child: StudentBookingsPage()),
-    const Center(child: Text('Notifications')),
+    const Center(child: StudentNotificationsPage()),
     const Center(child: StudentProfile()),
   ];
 
