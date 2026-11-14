@@ -520,27 +520,27 @@ class AttendanceUpdateSerializer(serializers.ModelSerializer):
 #         ]
 
 #both for student and instructors UI, also both for GET or PATCH
-class NotificationSerializer(serializers.ModelSerializer):
-    booking = ConsultationSlotDetailSerializer(read_only=True)
-
-    class Meta:
-        model = Notification
-        fields = [
-            'id',
-            'recipient',
-            'booking',
-            'title',
-            'message',
-            'is_read',
-            'created_at'
-        ]
-
-        extra_kwargs = {
-            'recipient' : {'read_only' : True},
-            'title' : {'read_only' : True},
-            'message' : {'read_only' : True},
-            # 'is_read' : {'read_only' : True}
-        }
+# class NotificationSerializer(serializers.ModelSerializer):
+#     booking = ConsultationSlotDetailSerializer(read_only=True)
+#
+#     class Meta:
+#         model = Notification
+#         fields = [
+#             'id',
+#             'recipient',
+#             'booking',
+#             'title',
+#             'message',
+#             'is_read',
+#             'created_at'
+#         ]
+#
+#         extra_kwargs = {
+#             'recipient' : {'read_only' : True},
+#             'title' : {'read_only' : True},
+#             'message' : {'read_only' : True},
+#             # 'is_read' : {'read_only' : True}
+#         }
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -792,3 +792,60 @@ class InstructorSelfProfileSerializer(serializers.ModelSerializer):
         if self.instance and self.instance.employee_id and self.instance.employee_id != value:
             raise serializers.ValidationError("Employee ID cannot be modified once set.")
         return value
+
+
+class NotificationBookingSlotSerializer(serializers.ModelSerializer):
+    slot_teacher = serializers.ReadOnlyField(source='slot.teacher.id')
+    slot_max_capacity = serializers.ReadOnlyField(source='slot.max_capacity')
+    slot_is_available = serializers.ReadOnlyField(source='slot.is_available')
+    slot_date = serializers.ReadOnlyField(source='slot.date')
+    slot_start_time = serializers.ReadOnlyField(source='slot.start_time')
+    slot_end_time = serializers.ReadOnlyField(source='slot.end_time')
+    slot_location = serializers.ReadOnlyField(source='slot.location')
+
+    class Meta:
+        model = ConsultationBooking
+        fields = [
+            'id',
+            'status',
+            'slot_teacher',
+            'slot_max_capacity',
+            'slot_is_available',
+            'slot_date',
+            'slot_start_time',
+            'slot_end_time',
+            'slot_location'
+        ]
+
+class NotificationSerializer(serializers.ModelSerializer):
+    booking_details = NotificationBookingSlotSerializer(source='booking', read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = [
+            'id',
+            'recipient',
+            'booking',
+            'booking_details',
+            'title',
+            'message',
+            'is_read',
+            'created_at',
+        ]
+
+        read_only_fields = [
+            'id',
+            'recipient',
+            'booking',
+            'booking_details',
+            'title',
+            'message',
+            'created_at',
+        ]
+
+
+class NotificationMarkReadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['id', 'is_read']
+        read_only_fields = ['id']

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import StudentLoginView, StudentRegisterView, InstructorLoginView, InstructorRegisterView, InstructorListView, InstructorDetailView, ConsultationSlotListCreateView, ConsultationSlotDetailView, AvailableSlotListView, ConsultationBookingListCreateView, ConsultationBookingCancelView, StudentBookingHistoryView, InstructorRosterView, AttendanceUpdateView, StudentProfileMetricView, InstructorSlotListCreateView, InstructorSlotDetailView, InstructorBookingListView, InstructorBookingDecisionView, InstructorBookingAttendanceView, InstructorAnalyticsView, InstructorProfileView, SignInView, logoutView, StudentProfileView
+from .views import StudentLoginView, StudentRegisterView, InstructorLoginView, InstructorRegisterView, InstructorListView, InstructorDetailView, ConsultationSlotListCreateView, ConsultationSlotDetailView, AvailableSlotListView, ConsultationBookingListCreateView, ConsultationBookingCancelView, StudentBookingHistoryView, InstructorRosterView, AttendanceUpdateView, StudentProfileMetricView, InstructorSlotListCreateView, InstructorSlotDetailView, InstructorBookingListView, InstructorBookingDecisionView, InstructorBookingAttendanceView, InstructorAnalyticsView, InstructorProfileView, SignInView, logoutView, StudentProfileView, NotificationListView, NotificationUnreadCountView, NotificationMarkReadView, NotificationMarkAllReadView
 
 urlpatterns = [
     path('auth/sign_in/', SignInView.as_view(), name='sign-in'),
@@ -26,5 +26,9 @@ urlpatterns = [
     path('instructor/me/analytics/', InstructorAnalyticsView.as_view(), name='instructor-analytics'),
     path('instructor/me/profile/', InstructorProfileView.as_view(), name='instructor-profile'),
     path('auth/logout/', logoutView.as_view(), name='logout'),
-    path('student/me/profile/', StudentProfileView.as_view(), name='student-me-profile')
+    path('student/me/profile/', StudentProfileView.as_view(), name='student-me-profile'),
+    path('notifications/', NotificationListView.as_view(), name='notification-list'),
+    path('notifications/unread-count/', NotificationUnreadCountView.as_view(), name='notification-unread-count'),
+    path('notifications/<int:pk>/read/', NotificationMarkReadView.as_view(), name='notification-mark-read'),
+    path('notifications/mark-all-read/', NotificationMarkAllReadView.as_view(), name='notification-mark-all-read')
 ]
