@@ -20,8 +20,8 @@ class NotificationService {
         token: authToken
       );
 
-      print('NOTIF STATUS: ${list.statusCode}');
-      print('NOTIF BODY: ${list.body}');
+      // print('NOTIF STATUS: ${list.statusCode}');
+      // print('NOTIF BODY: ${list.body}');
 
       if (list.statusCode == 200 || list.statusCode == 201) {
         final List<dynamic> notificationList = jsonDecode(list.body);
@@ -86,7 +86,8 @@ class NotificationService {
       if (response.statusCode == 200) {
         return true;
       } else {
-        return false;
+        print('markAsRead failed (${response.statusCode}): ${response.body}');
+        throw Exception('Failed to mark as read (${response.statusCode})');
       }
 
     } catch (e) {
@@ -115,7 +116,8 @@ class NotificationService {
       if (response.statusCode == 200) {
         return true;
       } else {
-        return false;
+        print('markAsRead failed (${response.statusCode}): ${response.body}');
+        throw Exception('Failed to mark as read (${response.statusCode})');
       }
 
     } catch (e) {

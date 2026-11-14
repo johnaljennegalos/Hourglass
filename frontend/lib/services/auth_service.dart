@@ -27,7 +27,7 @@ class AuthService {
 
         _accessToken = responseData['access'];
 
-        print('Token successfully extracted: $_accessToken');
+        // print('Token successfully extracted: $_accessToken');
         return responseData['role'] as String?;
 
       } else {

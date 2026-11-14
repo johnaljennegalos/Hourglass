@@ -28,7 +28,7 @@ urlpatterns = [
     path('auth/logout/', logoutView.as_view(), name='logout'),
     path('student/me/profile/', StudentProfileView.as_view(), name='student-me-profile'),
     path('notifications/', NotificationListView.as_view(), name='notification-list'),
-    path('notification/unread-count/', NotificationUnreadCountView.as_view(), name='notification-unread-count'),
+    path('notifications/unread-count/', NotificationUnreadCountView.as_view(), name='notification-unread-count'),
     path('notifications/<int:pk>/read/', NotificationMarkReadView.as_view(), name='notification-mark-read'),
-    path('notification/mark-all-read/', NotificationMarkAllReadView.as_view(), name='notification-mark-all-read')
+    path('notifications/mark-all-read/', NotificationMarkAllReadView.as_view(), name='notification-mark-all-read')
 ]

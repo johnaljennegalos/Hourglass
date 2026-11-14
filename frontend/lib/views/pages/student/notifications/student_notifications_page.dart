@@ -74,7 +74,7 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
 
       } catch (e) {
         if (!mounted) return;
-
+        _loadNotifications();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('$e'))
         );
@@ -97,7 +97,7 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
 
     } catch (e) {
       if (!mounted) return;
-
+      _loadNotifications();
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('$e'))
       );
