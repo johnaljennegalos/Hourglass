@@ -6,6 +6,8 @@ import 'package:hourglass/views/pages/student/home/student_home.dart';
 import 'package:hourglass/views/pages/student/profile/student_profile.dart';
 import 'package:hourglass/views/pages/student/student_bookings/student_bookings_page.dart';
 import 'package:hourglass/views/pages/student/notifications/student_notifications_page.dart';
+import 'package:hourglass/views/pages/student/notifications/widgets/notification_badge_icon.dart';
+import 'package:hourglass/services/notification_service.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -17,6 +19,7 @@ class StudentDashboard extends StatefulWidget {
 class _StudentDashboardState extends State<StudentDashboard> {
 
   int _selectedIndex = 0;
+  int _unreadCount = 0;
 
   final GlobalKey<CurvedNavigationBarState> _navBarKey = GlobalKey();
 
@@ -28,12 +31,34 @@ class _StudentDashboardState extends State<StudentDashboard> {
     const Center(child: StudentProfile()),
   ];
 
+  @override
+  void initState(){
+    super.initState();
+    _fetchUnreadCount();
+  }
+
+  Future<void> _fetchUnreadCount() async {
+    final count = await NotificationService().getUnreadCount();
+    if (!mounted || count ==null) return;
+    setState(() {
+      _unreadCount = count;
+    });
+  }
+
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
+      // appBar: AppBar(
+      //   title: Text('appbar'),
+      //   actions: [
+      //     NotificationBadgeIcon(
+      //       unreadCount: _unreadCount,
+      //     )
+      //   ],
+      // ),
       body: _pages[_selectedIndex],
 
       bottomNavigationBar: CurvedNavigationBar(
@@ -44,7 +69,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
         color: const Color(0xFF2563EB),
         buttonBackgroundColor: const Color(0xFF1E40AF),
         backgroundColor: Colors.transparent,
-        items: const <CurvedNavigationBarItem>[
+        items: <CurvedNavigationBarItem>[
           CurvedNavigationBarItem(
             child: Icon(Icons.home_rounded, size: 30, color: Colors.white),
             // label: 'Home',
@@ -61,7 +86,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
             labelStyle: TextStyle(color: Colors.white, fontSize: 12),
           ),
           CurvedNavigationBarItem(
-            child: Icon(Icons.notifications_rounded, size: 30, color: Colors.white),
+            child: NotificationBadgeIcon(unreadCount: _unreadCount, isSelected: _selectedIndex == 3,),
             // label: 'Notifications',
             labelStyle: TextStyle(color: Colors.white, fontSize: 12),
           ),

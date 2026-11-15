@@ -12,9 +12,9 @@ class NotificationBadgeIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Badge(
       isLabelVisible: unreadCount > 0,
-      label: Text(unreadCount > 99 ? '+99' : '$unreadCount'),
+      label: Text(unreadCount > 99 ? '+99' : '$unreadCount', style: const TextStyle(color: Colors.white, fontSize: 10),),
       backgroundColor: Colors.red,
-      child: Icon(isSelected ? Icons.notifications : Icons.notifications_outlined,),
+      child: Icon(isSelected ? Icons.notifications_rounded : Icons.notifications_outlined, size: 30, color: Colors.white,),
     );
   }
 }

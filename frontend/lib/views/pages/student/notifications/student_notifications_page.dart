@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/models/notification_model.dart';
 import 'package:hourglass/views/pages/student/notifications/widgets/notification_tile.dart';
+import 'package:hourglass/views/pages/student/notifications/widgets/notification_badge_icon.dart';
 import 'package:hourglass/services/notification_service.dart';
 
 class StudentNotificationsPage extends StatefulWidget {
@@ -168,7 +169,7 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
               onPressed: _handleMarkAllAsRead,
               child: const Text('Mark all as read'),
             )
-          ]
+          ],
         ],
       ),
       body: _buildBody(),
