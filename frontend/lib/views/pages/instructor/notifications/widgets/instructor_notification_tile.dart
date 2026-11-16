@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hourglass/models/notification_booking_details_model.dart';
 import 'package:hourglass/models/notification_model.dart';
 
 class NotificationTile extends StatelessWidget {
@@ -17,11 +18,31 @@ class NotificationTile extends StatelessWidget {
     return '${datetime.month}/${datetime.day}/${datetime.year}';
   }
 
+  String _formatStudentHeader(NotificationBookingDetailsModel details) {
+    final name = (details.studentName != null && details.studentName!.isNotEmpty) ? details.studentName! : 'Student';
+    final idPart = (details.studentName != null && details.studentName!.isNotEmpty) ? ' • ${details.studentNumber}' : '';
+    return '$name$idPart';
+  }
+
+  String _formatAcademicAndSlot(NotificationBookingDetailsModel details) {
+    final courseSection = [
+      details.studentCourse ?? '',
+      '${details.studentYearLevel ?? ''}${details.studentSection ?? ''}',
+    ].where((part) => part.isNotEmpty).join('');
+
+    final timeRange = (details.slotStartTime.isNotEmpty && details.slotEndTime.isNotEmpty) ? ' (${details.slotStartTime} - ${details.slotEndTime})' : '';
+
+    final schedule = details.slotDate.isNotEmpty ? '${details.slotDate}$timeRange' : '';
+
+    return [courseSection, schedule].where((part) => part.isNotEmpty).join(' • ');
+  }
+
   @override
   Widget build(BuildContext context) {
 
     final isUnread = !notification.isRead;
     final primaryColor = Theme.of(context).colorScheme.primary;
+    final details = notification.bookingDetails;
 
     return Card(
       elevation: isUnread ? 2 : 1,
@@ -95,39 +116,117 @@ class NotificationTile extends StatelessWidget {
                           color: Colors.grey[700]
                       ),
                     ),
-                    if (notification.bookingDetails != null) ...[
-                      SizedBox(height: 8,),
+                    if (details != null) ...[
+                      const SizedBox(height: 8,),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colors.grey.withValues(alpha: 0.1),
+                          color: Colors.grey.withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Colors.grey.withValues(alpha: 0.15),
+                          ),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.event_note,
-                              size: 14,
-                              color: Colors.grey[700],
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.school_outlined,
+                                  size: 14,
+                                  color: Colors.grey[700],
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    _formatStudentHeader(details),
+                                    style: TextStyle(
+                                      fontSize: 12.5,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey[900],
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                )
+                              ],
                             ),
-                            const SizedBox(width: 6),
-                            Flexible(
-                              child: Text(
-                                'Booking #${notification.bookingDetails!.slotDate} • ${notification.bookingDetails!.status}',
+                            if (_formatAcademicAndSlot(details).isNotEmpty) ...[
+                              const SizedBox(height: 4,),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.event_note,
+                                    size: 14,
+                                    color: Colors.grey[600],
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: Text(
+                                      _formatAcademicAndSlot(details),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[700],
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                            if (details.reason != null && details.reason!.trim().isNotEmpty) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                'Reason: ${details.reason!.trim()}',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey[800],
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.grey[700],
                                 ),
-                                maxLines: 1,
+                                maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                            )
+                            ]
                           ],
                         ),
-                      )
-                    ],
+                      ),
+                    ]
+                    // if (notification.bookingDetails != null) ...[
+                    //   SizedBox(height: 8,),
+                    //   Container(
+                    //     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    //     decoration: BoxDecoration(
+                    //       color: Colors.grey.withValues(alpha: 0.1),
+                    //       borderRadius: BorderRadius.circular(8),
+                    //     ),
+                    //     child: Row(
+                    //       mainAxisSize: MainAxisSize.min,
+                    //       children: [
+                    //         Icon(
+                    //           Icons.event_note,
+                    //           size: 14,
+                    //           color: Colors.grey[700],
+                    //         ),
+                    //         const SizedBox(width: 6),
+                    //         Flexible(
+                    //           child: Text(
+                    //             'Booking #${notification.bookingDetails!.slotDate} • ${notification.bookingDetails!.status}',
+                    //             style: TextStyle(
+                    //               fontSize: 12,
+                    //               fontWeight: FontWeight.w500,
+                    //               color: Colors.grey[800],
+                    //             ),
+                    //             maxLines: 1,
+                    //             overflow: TextOverflow.ellipsis,
+                    //           ),
+                    //         )
+                    //       ],
+                    //     ),
+                    //   )
+                    // ],
                   ],
                 ),
               )

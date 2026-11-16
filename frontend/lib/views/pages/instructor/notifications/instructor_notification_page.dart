@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/models/notification_model.dart';
-import 'package:hourglass/views/pages/student/notifications/widgets/notification_tile.dart';
-import 'package:hourglass/views/pages/student/notifications/widgets/notification_badge_icon.dart';
+import 'package:hourglass/views/pages/instructor/notifications/widgets/instructor_notification_tile.dart';
+import 'package:hourglass/views/pages/instructor/notifications/widgets/instructor_notification_badge_icon.dart';
 import 'package:hourglass/services/notification_service.dart';
 
 class StudentNotificationsPage extends StatefulWidget {

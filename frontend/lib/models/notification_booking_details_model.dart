@@ -10,6 +10,14 @@ class NotificationBookingDetailsModel {
   final int slotMaxCapacity;
   final bool slotIsAvailable;
 
+  final int? studentUserId;
+  final String? studentNumber;
+  final String? studentName;
+  final String? studentCourse;
+  final String? studentYearLevel;
+  final String? studentSection;
+  final String? reason;
+
   NotificationBookingDetailsModel({
     required this.id,
     required this.status,
@@ -19,7 +27,14 @@ class NotificationBookingDetailsModel {
     required this.slotEndTime,
     required this.slotLocation,
     required this.slotMaxCapacity,
-    required this.slotIsAvailable
+    required this.slotIsAvailable,
+    this.studentUserId,
+    this.studentNumber,
+    this.studentName,
+    this.studentCourse,
+    this.studentYearLevel,
+    this.studentSection,
+    this.reason,
   });
 
   factory NotificationBookingDetailsModel.fromJson(Map<String, dynamic> json){
@@ -31,8 +46,15 @@ class NotificationBookingDetailsModel {
       slotStartTime: json['slot_start_time'] ?? '',
       slotEndTime: json['slot_end_time'] ?? '',
       slotLocation: json['slot_location'] ?? '',
-      slotMaxCapacity: json['max_capacity'] ?? 0,
-      slotIsAvailable: json['slot_is_available'] ?? false
+      slotMaxCapacity: json['slot_max_capacity'] ?? json['max_capacity'] ?? 0,
+      slotIsAvailable: json['slot_is_available'] ?? false,
+      studentUserId: json['student_user_id'],
+      studentNumber: json['student_number'],
+      studentName: json['student_name'],
+      studentCourse: json['student_course'],
+      studentYearLevel: json['student_year_level'],
+      studentSection: json['student_section'],
+      reason: json['reason'],
     );
   }
 
