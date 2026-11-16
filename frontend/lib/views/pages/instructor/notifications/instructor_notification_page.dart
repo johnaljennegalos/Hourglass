@@ -4,16 +4,16 @@ import 'package:hourglass/views/pages/instructor/notifications/widgets/instructo
 import 'package:hourglass/views/pages/instructor/notifications/widgets/instructor_notification_badge_icon.dart';
 import 'package:hourglass/services/notification_service.dart';
 
-class StudentNotificationsPage extends StatefulWidget {
+class InstructorNotificationPage extends StatefulWidget {
   final VoidCallback? onUnreadCountChange;
 
-  const StudentNotificationsPage({super.key, this.onUnreadCountChange});
+  const InstructorNotificationPage({super.key, this.onUnreadCountChange});
 
   @override
-  State<StudentNotificationsPage> createState() => _StudentNotificationsPageState();
+  State<InstructorNotificationPage> createState() => _InstructorNotificationPageState();
 }
 
-class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
+class _InstructorNotificationPageState extends State<InstructorNotificationPage> {
   List<NotificationModel> _notifications = [];
   bool _isLoading = true;
   String? _errorMessage;
@@ -146,7 +146,7 @@ class _StudentNotificationsPageState extends State<StudentNotificationsPage> {
         itemCount: _notifications.length,
         itemBuilder: (context, index) {
           final notification = _notifications[index];
-          return NotificationTile(
+          return InstructorNotificationTile(
             notification: notification,
             onTap: () => _handleNotificationTap(notification),
           );

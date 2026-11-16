@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 
-class NotificationBadgeIcon extends StatelessWidget {
+class InstructorNotificationBadgeIcon extends StatelessWidget {
   final int unreadCount;
   final bool isSelected;
 
-  const NotificationBadgeIcon({super.key, required this.unreadCount, this.isSelected = false});
+  const InstructorNotificationBadgeIcon({super.key, required this.unreadCount, this.isSelected = false});
 
 
   @override

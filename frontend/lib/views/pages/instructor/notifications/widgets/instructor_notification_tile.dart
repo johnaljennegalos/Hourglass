@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hourglass/models/notification_booking_details_model.dart';
 import 'package:hourglass/models/notification_model.dart';
 
-class NotificationTile extends StatelessWidget {
+class InstructorNotificationTile extends StatelessWidget {
 
   final NotificationModel notification;
   final VoidCallback onTap;
 
-  const NotificationTile({super.key, required this.notification, required this.onTap});
+  const InstructorNotificationTile({super.key, required this.notification, required this.onTap});
 
   String _formatTimeAgo(DateTime datetime) {
     final diff = DateTime.now().difference(datetime);
@@ -24,13 +24,21 @@ class NotificationTile extends StatelessWidget {
     return '$name$idPart';
   }
 
+  String trimTime(String time) {
+    if (time.length > 5) {
+      return time.substring(0, 5);
+    } else {
+      return time;
+    }
+  }
+
   String _formatAcademicAndSlot(NotificationBookingDetailsModel details) {
     final courseSection = [
       details.studentCourse ?? '',
       '${details.studentYearLevel ?? ''}${details.studentSection ?? ''}',
     ].where((part) => part.isNotEmpty).join('');
 
-    final timeRange = (details.slotStartTime.isNotEmpty && details.slotEndTime.isNotEmpty) ? ' (${details.slotStartTime} - ${details.slotEndTime})' : '';
+    final timeRange = (details.slotStartTime.isNotEmpty && details.slotEndTime.isNotEmpty) ? ' (${trimTime(details.slotStartTime)} - ${trimTime(details.slotEndTime)}' : '';
 
     final schedule = details.slotDate.isNotEmpty ? '${details.slotDate}$timeRange' : '';
 

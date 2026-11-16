@@ -1,3 +1,4 @@
+from enum import nonmember
 from getpass import fallback_getpass
 
 from rest_framework import serializers
@@ -830,6 +831,15 @@ class NotificationBookingSlotSerializer(serializers.ModelSerializer):
             'slot_end_time',
             'slot_location'
         ]
+
+    def get_student_name(self, obj):
+        if not obj.student:
+            return None
+
+        full_name = obj.student.get_full_name().strip()
+
+        return full_name or obj.student.username
+
 
 class NotificationSerializer(serializers.ModelSerializer):
     booking_details = NotificationBookingSlotSerializer(source='booking', read_only=True)
