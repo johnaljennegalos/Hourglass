@@ -4,6 +4,9 @@ import 'package:hourglass/views/pages/instructor/profile/instructor_profile.dart
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
 import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:hourglass/views/pages/instructor/instructor_bookings/instructor_booking_page.dart';
+import 'package:hourglass/views/pages/instructor/notifications/widgets/instructor_notification_badge_icon.dart';
+import 'package:hourglass/views/pages/instructor/notifications/instructor_notification_page.dart';
+import 'package:hourglass/services/notification_service.dart';
 
 
 class InstructorDashboard extends StatefulWidget {
@@ -16,13 +19,28 @@ class InstructorDashboard extends StatefulWidget {
 class _InstructorDashboardState extends State<InstructorDashboard> {
 
   int _selectedIndex = 0;
+  int _unreadCount = 0;
 
   final List<Widget> _pages = [
-    const Center(child: Text('Notifs Page')),
+    const Center(child: InstructorNotificationPage()),
     const Center(child: InstructorBookingPage()),
     const Center(child: InstructorSlot()),
     const Center(child: InstructorProfile()),
   ];
+
+  @override
+  void initState(){
+    super.initState();
+    _fetchUnreadCount();
+  }
+
+  Future<void> _fetchUnreadCount() async {
+    final count = await NotificationService().getUnreadCount();
+    if (!mounted || count ==null) return;
+    setState(() {
+      _unreadCount = count;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +53,10 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
         color: const Color(0xFF2563EB),
         buttonBackgroundColor: const Color(0xFF1E40AF),
         backgroundColor: Colors.transparent,
-        items: const <CurvedNavigationBarItem>[
+        items: <CurvedNavigationBarItem>[
             CurvedNavigationBarItem(
-              child: Icon(Icons.notifications, size: 30, color: Colors.white),
-              label: 'Notifs',
+              child: InstructorNotificationBadgeIcon(unreadCount: _unreadCount, isSelected: _selectedIndex == 3,),
+              // label: 'Notifs',
               labelStyle: TextStyle(color: Colors.white, fontSize: 12),
             ),
             CurvedNavigationBarItem(
