@@ -796,6 +796,12 @@ class InstructorSelfProfileSerializer(serializers.ModelSerializer):
 
 class NotificationBookingSlotSerializer(serializers.ModelSerializer):
     slot_teacher = serializers.ReadOnlyField(source='slot.teacher.id')
+    student_user_id = serializers.ReadOnlyField(source='student.id')
+    student_number = serializers.ReadOnlyField(source='student.student_id')
+    student_name = serializers.SerializerMethodField()
+    student_course = serializers.ReadOnlyField(source='student.course')
+    student_year_level = serializers.ReadOnlyField(source='student.year_level')
+    student_section = serializers.ReadOnlyField(source='student.section')
     slot_max_capacity = serializers.ReadOnlyField(source='slot.max_capacity')
     slot_is_available = serializers.ReadOnlyField(source='slot.is_available')
     slot_date = serializers.ReadOnlyField(source='slot.date')
@@ -808,6 +814,14 @@ class NotificationBookingSlotSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'status',
+            'reason',
+            'slot_teacher',
+            'student_user_id',
+            'student_number',
+            'student_name',
+            'student_course',
+            'student_year_level',
+            'student_section',
             'slot_teacher',
             'slot_max_capacity',
             'slot_is_available',
