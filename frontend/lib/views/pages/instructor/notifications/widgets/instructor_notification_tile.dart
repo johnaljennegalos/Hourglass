@@ -32,13 +32,27 @@ class InstructorNotificationTile extends StatelessWidget {
     }
   }
 
+  String formatTime12Hour(String time) {
+    final parts = time.split(':');
+    if (parts.length < 2) return time;
+
+    final hour = int.tryParse(parts[0]);
+    if (hour == null) return time;
+
+    final minute = parts[1];
+    final period = hour >= 12 ? 'PM' : 'AM';
+    final hour12 = hour % 12 == 0 ? 12 : hour % 12;
+
+    return '$hour12:$minute $period';
+  }
+
   String _formatAcademicAndSlot(NotificationBookingDetailsModel details) {
     final courseSection = [
       details.studentCourse ?? '',
       '${details.studentYearLevel ?? ''}${details.studentSection ?? ''}',
-    ].where((part) => part.isNotEmpty).join('');
+    ].where((part) => part.isNotEmpty).join('-');
 
-    final timeRange = (details.slotStartTime.isNotEmpty && details.slotEndTime.isNotEmpty) ? ' (${trimTime(details.slotStartTime)} - ${trimTime(details.slotEndTime)}' : '';
+    final timeRange = (details.slotStartTime.isNotEmpty && details.slotEndTime.isNotEmpty) ? ' (${formatTime12Hour(details.slotStartTime)} - ${formatTime12Hour(details.slotEndTime)})' : '';
 
     final schedule = details.slotDate.isNotEmpty ? '${details.slotDate}$timeRange' : '';
 
@@ -164,11 +178,15 @@ class InstructorNotificationTile extends StatelessWidget {
                             if (_formatAcademicAndSlot(details).isNotEmpty) ...[
                               const SizedBox(height: 4,),
                               Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.event_note,
-                                    size: 14,
-                                    color: Colors.grey[600],
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 2),
+                                    child: Icon(
+                                      Icons.event_note,
+                                      size: 14,
+                                      color: Colors.grey[600],
+                                    ),
                                   ),
                                   const SizedBox(width: 6),
                                   Expanded(
@@ -178,8 +196,6 @@ class InstructorNotificationTile extends StatelessWidget {
                                         fontSize: 12,
                                         color: Colors.grey[700],
                                       ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],
