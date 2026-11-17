@@ -8,6 +8,7 @@ import 'package:hourglass/views/pages/student/student_bookings/student_bookings_
 import 'package:hourglass/views/pages/student/notifications/student_notifications_page.dart';
 import 'package:hourglass/views/pages/student/notifications/widgets/notification_badge_icon.dart';
 import 'package:hourglass/services/notification_service.dart';
+import 'package:hourglass/views/pages/student/dashboard/student_dashboard_page.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -24,7 +25,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
   final GlobalKey<CurvedNavigationBarState> _navBarKey = GlobalKey();
 
   final List<Widget> _pages = [
-    const Center(child: StudentHome()),
+    const Center(child: StudentDashboardPage()),
     const Center(child: BookSlot()),
     const Center(child: StudentBookingsPage()),
     const Center(child: StudentNotificationsPage()),
