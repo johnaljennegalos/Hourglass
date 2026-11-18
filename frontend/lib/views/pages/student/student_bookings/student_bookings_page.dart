@@ -5,7 +5,9 @@ import 'package:hourglass/services/student_service.dart';
 import 'package:intl/date_symbols.dart';
 
 class StudentBookingsPage extends StatefulWidget {
-  const StudentBookingsPage({super.key});
+  final int initialTabIndex;
+
+  const StudentBookingsPage({super.key, this.initialTabIndex = 0});
 
   @override
   State<StudentBookingsPage> createState() => _StudentBookingsPageState();
@@ -47,8 +49,9 @@ class _StudentBookingsPageState extends State<StudentBookingsPage> {
 
           _applyFilter(_selectedFilter);
 
-          _isLoading = false;
         }
+
+        _isLoading = false;
       });
 
     } catch (e) {
@@ -191,6 +194,7 @@ class _StudentBookingsPageState extends State<StudentBookingsPage> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
+      initialIndex: widget.initialTabIndex,
       child: Scaffold(
         body: SafeArea(
           child: Column(
