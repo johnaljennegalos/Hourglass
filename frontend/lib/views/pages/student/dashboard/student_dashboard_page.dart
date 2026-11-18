@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/student/dashboard/widgets/dashboard_header.dart';
 import 'package:hourglass/views/pages/student/dashboard/widgets/booking_stat_grid.dart';
+import 'package:hourglass/views/pages/student/dashboard/widgets/recent_activity_card.dart';
 import 'package:hourglass/models/consultation_booking.dart';
 import 'package:hourglass/services/student_service.dart';
 
@@ -63,6 +64,12 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
     }
   }
 
+  List<ConsultationBooking> _recentBookings() {
+    final sorted = List<ConsultationBooking>.from(_bookings)
+        ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return sorted.take(4).toList();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +82,8 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
             children: [
               DashboardHeader(studentName: _studentName, avatarUrl: _avatarUrl,),
               SizedBox(height: 20),
-              BookingStatGrid(totalConsultations: _metrics['total_consultations'] ?? 0, incomingConsultations: _metrics['incoming_consultations'] ?? 0, completedConsultations: _metrics['completed_consultations'] ?? 0, pendingConsultations: _metrics['no_show_consultations'] ?? 0)
+              BookingStatGrid(totalConsultations: _metrics['total_consultations'] ?? 0, incomingConsultations: _metrics['incoming_consultations'] ?? 0, completedConsultations: _metrics['completed_consultations'] ?? 0, pendingConsultations: _metrics['no_show_consultations'] ?? 0),
+              RecentActivityCard(recentBookings: _recentBookings())
             ],
           ),
         ),
