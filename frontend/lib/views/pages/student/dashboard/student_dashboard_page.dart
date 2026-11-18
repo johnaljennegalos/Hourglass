@@ -85,6 +85,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
               DashboardHeader(studentName: _studentName, avatarUrl: _avatarUrl,),
               SizedBox(height: 20),
               BookingStatGrid(totalConsultations: _metrics['total_consultations'] ?? 0, incomingConsultations: _metrics['incoming_consultations'] ?? 0, completedConsultations: _metrics['completed_consultations'] ?? 0, pendingConsultations: _metrics['no_show_consultations'] ?? 0),
+              SizedBox(height: 20),
               RecentActivityCard(recentBookings: _recentBookings(), onViewAll: widget.onViewAllActivity,)
             ],
           ),

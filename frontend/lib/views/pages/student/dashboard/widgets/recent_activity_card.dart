@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/models/consultation_booking.dart';
+import 'package:intl/intl.dart';
 
 class RecentActivityCard extends StatelessWidget {
   final List<ConsultationBooking> recentBookings;
@@ -19,6 +20,12 @@ class RecentActivityCard extends StatelessWidget {
       default:
         return (Colors.amber.shade700, Icons.schedule_rounded);
     }
+  }
+
+  String _formatDate(String rawDate) {
+    final parsed = DateTime.tryParse(rawDate);
+    if (parsed == null) return rawDate;
+    return DateFormat('MMM d, y • h:mm a').format(parsed.toLocal());
   }
 
   @override
@@ -90,6 +97,7 @@ class RecentActivityCard extends StatelessWidget {
                 final title = teacherName.isNotEmpty ? teacherName : 'Consultation #${booking.id}';
                 final hasReason = booking.reason != null && booking.reason!.trim().isNotEmpty;
                 final subtitle = hasReason ? booking.reason!.trim() : '${booking.slot.date} • ${booking.slot.startTime}';
+                final date = _formatDate(booking.createdAt);
 
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -126,6 +134,15 @@ class RecentActivityCard extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis
                           ),
+                          Text(
+                            date,
+                            style: TextStyle(
+                                fontSize: 12.5,
+                                color: Colors.grey.shade600
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis
+                        ),
                         ],
                       ),
                     ),
