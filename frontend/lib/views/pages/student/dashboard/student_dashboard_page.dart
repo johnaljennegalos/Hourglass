@@ -4,9 +4,11 @@ import 'package:hourglass/views/pages/student/dashboard/widgets/booking_stat_gri
 import 'package:hourglass/views/pages/student/dashboard/widgets/recent_activity_card.dart';
 import 'package:hourglass/models/consultation_booking.dart';
 import 'package:hourglass/services/student_service.dart';
+import 'package:hourglass/views/pages/student/student_bookings/student_bookings_page.dart';
 
 class StudentDashboardPage extends StatefulWidget {
-  const StudentDashboardPage({super.key});
+  final VoidCallback? onViewAllActivity;
+  const StudentDashboardPage({super.key, this.onViewAllActivity,});
 
   @override
   State<StudentDashboardPage> createState() => _StudentDashboardPageState();
@@ -83,7 +85,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
               DashboardHeader(studentName: _studentName, avatarUrl: _avatarUrl,),
               SizedBox(height: 20),
               BookingStatGrid(totalConsultations: _metrics['total_consultations'] ?? 0, incomingConsultations: _metrics['incoming_consultations'] ?? 0, completedConsultations: _metrics['completed_consultations'] ?? 0, pendingConsultations: _metrics['no_show_consultations'] ?? 0),
-              RecentActivityCard(recentBookings: _recentBookings())
+              RecentActivityCard(recentBookings: _recentBookings(), onViewAll: widget.onViewAllActivity,)
             ],
           ),
         ),

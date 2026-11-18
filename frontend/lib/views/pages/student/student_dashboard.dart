@@ -21,8 +21,17 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   int _selectedIndex = 0;
   int _unreadCount = 0;
+  int _bookingsInitialTab = 0;
 
   final GlobalKey<CurvedNavigationBarState> _navBarKey = GlobalKey();
+
+  void _openBookingsTab({int tabIndex = 0}) {
+    setState(() {
+      _bookingsInitialTab = tabIndex;
+      _selectedIndex = 2;
+    });
+    _navBarKey.currentState?.setPage(2);
+  }
 
   final List<Widget> _pages = [
     const Center(child: StudentDashboardPage()),
@@ -50,6 +59,19 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final pages = <Widget>[
+      StudentDashboardPage(
+        onViewAllActivity: () => _openBookingsTab(tabIndex: 1),
+      ),
+      const BookSlot(),
+      StudentBookingsPage(
+        key: ValueKey(_bookingsInitialTab),
+        initialTabIndex: _bookingsInitialTab,
+      ),
+      const StudentNotificationsPage(),
+      const StudentProfile(),
+    ];
+
     return Scaffold(
       extendBody: true,
       // appBar: AppBar(
@@ -60,7 +82,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
       //     )
       //   ],
       // ),
-      body: _pages[_selectedIndex],
+      body: pages[_selectedIndex],
 
       bottomNavigationBar: CurvedNavigationBar(
         key: _navBarKey,
@@ -99,6 +121,9 @@ class _StudentDashboardState extends State<StudentDashboard> {
         ],
         onTap: (index) {
           setState(() {
+            if (index == 2) {
+              _bookingsInitialTab = 0;
+            }
             _selectedIndex = index;
           });
         },),
