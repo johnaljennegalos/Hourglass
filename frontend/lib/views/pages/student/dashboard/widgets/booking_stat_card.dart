@@ -10,15 +10,14 @@ class BookingStatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(),
-        color: Colors.grey.shade200
+        border: Border.all(color: Colors.grey.shade200),
+        color: Colors.white
       ),
       padding: const EdgeInsets.all(14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             width: 36,
@@ -32,23 +31,30 @@ class BookingStatCard extends StatelessWidget {
               color: accentColor,
             ),
           ),
-          SizedBox(height: 12,),
-          Text(
-            value.toString(),
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold
+          SizedBox(width: 10,),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  value.toString(),
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+                SizedBox(width: 10,),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12.5,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
-          ),
-          SizedBox(height: 2,),
-          Text(
-            title,
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 12.5,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

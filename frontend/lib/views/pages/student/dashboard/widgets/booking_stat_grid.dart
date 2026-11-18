@@ -34,7 +34,8 @@ class BookingStatGrid extends StatelessWidget {
             )
           ],
         ),
-        SizedBox(width: 12,),
+        SizedBox(width: 10,),
+        SizedBox(height: 10,),
         Row(
           children: [
             Expanded(
