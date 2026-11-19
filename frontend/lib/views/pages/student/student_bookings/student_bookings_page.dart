@@ -25,10 +25,12 @@ class _StudentBookingsPageState extends State<StudentBookingsPage> {
   String _selectedFilter = 'ALL';
 
   void _applyFilter(String status) {
+    final activeBooking = _allBookings.where((b) => !b.isPastSlot && (b.status.toUpperCase() == 'PENDING' || b.status.toUpperCase() == 'CONFIRMED')).toList();
+
     if (status == 'ALL') {
-      _filteredBookings = List.from(_allBookings);
+      _filteredBookings = activeBooking;
     } else {
-      _filteredBookings = _allBookings.where((booking) => booking.status.toUpperCase() == status.toUpperCase()).toList();
+      _filteredBookings = activeBooking.where((b) => b.status.toUpperCase() == status.toUpperCase()).toList();
     }
   }
 
@@ -362,16 +364,15 @@ class _StudentBookingsPageState extends State<StudentBookingsPage> {
                 ],
               ),
               _buildFilterChips(),
-              _buildHistoryContent()
-              // Expanded(
-              //   child: TabBarView(
-              //     children: [
-              //       _buildBookingContent(),
-              //       Center(child: Text('History')),
-              //     ],
-              //   ),
-              // ),
-              //add a button 'Book new appointment'
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    _buildBookingContent(),
+                    _buildHistoryContent()
+                  ],
+                ),
+              ),
+              // add a button 'Book new appointment'
             ],
           ),
         ),
