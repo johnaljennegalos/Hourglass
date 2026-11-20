@@ -31,13 +31,13 @@ class DashboardHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Welcome, ${_getDisplayedName()}', style: TextStyle(
+              Text('Welcome, ${_getDisplayedName()}!', style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ), maxLines: 1, overflow: TextOverflow.ellipsis,),
               SizedBox(height: 4,),
               Text(
-                'Here is what is happening on your account',
+                'Here is what is happening on your account.',
                 style: TextStyle(
                     fontSize: 13.5,
                     color: Colors.grey

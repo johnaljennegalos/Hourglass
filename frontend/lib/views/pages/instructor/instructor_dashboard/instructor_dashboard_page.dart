@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/instructor/instructor_dashboard/widgets/dashboard_header.dart';
 import 'package:hourglass/services/instructor_service.dart';
+import 'package:hourglass/models/teacher_info.dart';
 import 'package:hourglass/models/consultation_booking.dart';
 
 
@@ -13,10 +14,11 @@ class InstructorDashboardPage extends StatefulWidget {
 
 class _InstructorDashboardPageState extends State<InstructorDashboardPage> {
   List<ConsultationBooking> _bookings = [];
+  TeacherInfo? _teacherInfo;
   Map<String, dynamic> _metrics = {};
   bool _isLoading = true;
   String? _errorMessage;
-  String _studentName = '';
+  String _instructorName = '';
   String? _avatarUrl;
 
   @override
@@ -38,14 +40,20 @@ class _InstructorDashboardPageState extends State<InstructorDashboardPage> {
         InstructorService().getInstructorBookings(),
       ]);
 
+      // print(results);
+
       if (!mounted) return;
 
       final profile = results[0] as Map<String, dynamic>?;
       final instructor = profile?['teacher'] as Map<String, dynamic>?;
+      if (profile != null) {
+        _teacherInfo = TeacherInfo.fromJson(profile);
+      }
       final metrics = profile?['metrics'] as Map<String, dynamic>?;
       final fetchedBookings = results[1] as List<ConsultationBooking>?;
 
       setState(() {
+        _teacherInfo = profile != null ? TeacherInfo.fromJson(profile) : null;
         _bookings = fetchedBookings ?? [];
         _instructorName = instructor?['first_name'] ?? (_bookings.isNotEmpty ? _bookings.first.firstName : '');
         _metrics = metrics ?? {};
@@ -55,6 +63,8 @@ class _InstructorDashboardPageState extends State<InstructorDashboardPage> {
 
     } catch (e) {
       if (!mounted) return;
+
+      // print('Dashboard catch error: $e');
 
       setState(() {
         _errorMessage = 'Failed to load dashboard data. Please try again.';
@@ -79,7 +89,7 @@ class _InstructorDashboardPageState extends State<InstructorDashboardPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DashboardHeader(instructorName: , avatarUrl: _avatarUrl,),
+              DashboardHeader(instructorName: _teacherInfo?.firstName ?? '', avatarUrl: _teacherInfo?.avatarUrl,),
               // SizedBox(height: 20),
               // BookingStatGrid(totalConsultations: _metrics['total_consultations'] ?? 0, incomingConsultations: _metrics['incoming_consultations'] ?? 0, completedConsultations: _metrics['completed_consultations'] ?? 0, pendingConsultations: _metrics['no_show_consultations'] ?? 0),
               // SizedBox(height: 20),
