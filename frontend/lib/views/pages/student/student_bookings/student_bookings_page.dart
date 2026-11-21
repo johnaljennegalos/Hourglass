@@ -25,7 +25,9 @@ class _StudentBookingsPageState extends State<StudentBookingsPage> {
   String _selectedFilter = 'ALL';
 
   void _applyFilter(String status) {
-    final activeBooking = _allBookings.where((b) => !b.isPastSlot && (b.status.toUpperCase() == 'PENDING' || b.status.toUpperCase() == 'CONFIRMED')).toList();
+    final activeBooking = _allBookings.where((b) => (b.status.toUpperCase() == 'PENDING' || b.status.toUpperCase() == 'CONFIRMED')).toList();
+
+    final historyBooking = _allBookings.where((b) => b.isPastSlot || (b.status.toUpperCase() == 'COMPLETED' || b.status.toUpperCase() == 'CANCELLED' || b.status.toUpperCase() == 'REJECTED')).toList();
 
     if (status == 'ALL') {
       _filteredBookings = activeBooking;
