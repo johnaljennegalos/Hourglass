@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/student/profile/widgets/edit_profile/edit_profile.dart';
 import 'package:hourglass/views/pages/instructor/instructor_slot.dart';
 import 'package:hourglass/views/pages/instructor/profile/widgets/manage_slot/manage_availability_slot.dart';
+import 'package:hourglass/views/pages/student/book_slot/book_slot.dart';
 
 class AccountSection extends StatelessWidget {
   final VoidCallback? onProfileUpdated;
@@ -42,7 +43,7 @@ class AccountSection extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ManageAvailabilitySlot())
+                      MaterialPageRoute(builder: (context) => BookSlot())
                   );
                 },
               ),

@@ -74,16 +74,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
     return Scaffold(
       extendBody: true,
-      // appBar: AppBar(
-      //   title: Text('appbar'),
-      //   actions: [
-      //     NotificationBadgeIcon(
-      //       unreadCount: _unreadCount,
-      //     )
-      //   ],
-      // ),
       body: pages[_selectedIndex],
-
       bottomNavigationBar: CurvedNavigationBar(
         key: _navBarKey,
         index: 0,

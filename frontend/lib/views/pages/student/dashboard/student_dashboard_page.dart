@@ -46,6 +46,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
       final profile = results[0] as Map<String, dynamic>?;
       final student = profile?['student'] as Map<String, dynamic>?;
       final metrics = profile?['metrics'] as Map<String, dynamic>?;
+      print(metrics);
       final fetchedBookings = results[1] as List<ConsultationBooking>?;
 
       setState(() {
@@ -72,6 +73,9 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
     return sorted.take(4).toList();
   }
 
+  int get _pendingCount =>
+      _bookings.where((b) => b.status.toUpperCase() == 'PENDING').length;
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +88,7 @@ class _StudentDashboardPageState extends State<StudentDashboardPage> {
             children: [
               DashboardHeader(studentName: _studentName, avatarUrl: _avatarUrl,),
               SizedBox(height: 20),
-              BookingStatGrid(totalConsultations: _metrics['total_consultations'] ?? 0, incomingConsultations: _metrics['incoming_consultations'] ?? 0, completedConsultations: _metrics['completed_consultations'] ?? 0, pendingConsultations: _metrics['no_show_consultations'] ?? 0),
+              BookingStatGrid(totalConsultations: _metrics['total_consultations'] ?? 0, incomingConsultations: _metrics['incoming_consultations'] ?? 0, completedConsultations: _metrics['completed_consultations'] ?? 0, pendingConsultations: _pendingCount ?? 0),
               SizedBox(height: 20),
               RecentActivityCard(recentBookings: _recentBookings(), onViewAll: widget.onViewAllActivity,)
             ],
