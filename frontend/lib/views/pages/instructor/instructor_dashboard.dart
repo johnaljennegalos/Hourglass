@@ -23,6 +23,15 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
 
   int _selectedIndex = 0;
   int _unreadCount = 0;
+  int _bookingsInitialTab = 0;
+
+  void _openBookingsTab({int tabIndex = 0}) {
+    setState(() {
+      _bookingsInitialTab = tabIndex;
+      _selectedIndex = 2;
+    });
+    _navBarKey.currentState?.setPage(2);
+  }
 
   final List<Widget> _pages = [
     const Center(child: InstructorDashboardPage()),
@@ -48,9 +57,22 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final pages = <Widget>[
+      InstructorDashboardPage(
+        onViewAllActivity: () => _openBookingsTab(tabIndex: 1),
+      ),
+      InstructorSlot(),
+      InstructorBookingPage(
+        key: ValueKey(_bookingsInitialTab),
+        // initialTabIndex: _bookingsInitialTab,
+      ),
+      InstructorNotificationPage(),
+      InstructorProfile()
+    ];
+
     return Scaffold(
       extendBody: true,
-      body: _pages[_selectedIndex],
+      body: pages[_selectedIndex],
 
       bottomNavigationBar: CurvedNavigationBar(
         key: _navBarKey,

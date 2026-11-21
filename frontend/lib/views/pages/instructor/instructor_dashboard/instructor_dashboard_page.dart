@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/instructor/instructor_dashboard/widgets/dashboard_header.dart';
 import 'package:hourglass/views/pages/instructor/instructor_dashboard/widgets/booking_stat_grid.dart';
+import 'package:hourglass/views/pages/instructor/instructor_dashboard/widgets/recent_activity_card.dart';
 import 'package:hourglass/services/instructor_service.dart';
 import 'package:hourglass/models/teacher_info.dart';
 import 'package:hourglass/models/consultation_booking.dart';
+import 'package:hourglass/models/notification_booking_details_model.dart';
 
 
 
 class InstructorDashboardPage extends StatefulWidget {
-  const InstructorDashboardPage({super.key});
+  final VoidCallback? onViewAllActivity;
+  const InstructorDashboardPage({super.key, this.onViewAllActivity,});
 
   @override
   State<InstructorDashboardPage> createState() => _InstructorDashboardPageState();
@@ -76,11 +79,11 @@ class _InstructorDashboardPageState extends State<InstructorDashboardPage> {
   int get _completedConsultations => _bookings.where((b) => b.status.toUpperCase() == 'COMPLETED').length;
   int get _pendingConsultations => _bookings.where((b) => b.status.toUpperCase() == 'PENDING').length;
 
-  // List<ConsultationBooking> _recentBookings() {
-  //   final sorted = List<ConsultationBooking>.from(_bookings)
-  //     ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-  //   return sorted.take(4).toList();
-  // }
+  List<ConsultationBooking> _recentBookings() {
+    final sorted = List<ConsultationBooking>.from(_bookings)
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return sorted.take(4).toList();
+  }
 
 
 
@@ -94,10 +97,10 @@ class _InstructorDashboardPageState extends State<InstructorDashboardPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DashboardHeader(instructorName: _teacherInfo?.firstName ?? '', avatarUrl: _teacherInfo?.avatarUrl,),
-              // SizedBox(height: 20),
+              SizedBox(height: 20),
               BookingStatGrid(totalConsultations: _totalConsultations ?? 0, incomingConsultations: _incomingCount ?? 0, completedConsultations: _completedConsultations ?? 0, pendingConsultations: _pendingConsultations ?? 0),
-              // SizedBox(height: 20),
-              // RecentActivityCard(recentBookings: _recentBookings(), onViewAll: widget.onViewAllActivity,)
+              SizedBox(height: 20),
+              RecentActivityCard(recentBookings: _recentBookings(), onViewAll: widget.onViewAllActivity,)
             ],
           ),
         ),
