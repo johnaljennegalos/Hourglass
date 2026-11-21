@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hourglass/views/pages/instructor/instructor_dashboard/widgets/dashboard_header.dart';
+import 'package:hourglass/views/pages/instructor/instructor_dashboard/widgets/booking_stat_grid.dart';
 import 'package:hourglass/services/instructor_service.dart';
 import 'package:hourglass/models/teacher_info.dart';
 import 'package:hourglass/models/consultation_booking.dart';
+
 
 
 class InstructorDashboardPage extends StatefulWidget {
@@ -15,7 +17,6 @@ class InstructorDashboardPage extends StatefulWidget {
 class _InstructorDashboardPageState extends State<InstructorDashboardPage> {
   List<ConsultationBooking> _bookings = [];
   TeacherInfo? _teacherInfo;
-  Map<String, dynamic> _metrics = {};
   bool _isLoading = true;
   String? _errorMessage;
   String _instructorName = '';
@@ -49,14 +50,11 @@ class _InstructorDashboardPageState extends State<InstructorDashboardPage> {
       if (profile != null) {
         _teacherInfo = TeacherInfo.fromJson(profile);
       }
-      final metrics = profile?['metrics'] as Map<String, dynamic>?;
       final fetchedBookings = results[1] as List<ConsultationBooking>?;
 
       setState(() {
         _teacherInfo = profile != null ? TeacherInfo.fromJson(profile) : null;
         _bookings = fetchedBookings ?? [];
-        _instructorName = instructor?['first_name'] ?? (_bookings.isNotEmpty ? _bookings.first.firstName : '');
-        _metrics = metrics ?? {};
         _avatarUrl = instructor?['avatar'] ?? (_bookings.isNotEmpty ? _bookings.first.studentAvatar : null);
         _isLoading = false;
       });
@@ -73,11 +71,17 @@ class _InstructorDashboardPageState extends State<InstructorDashboardPage> {
     }
   }
 
+  int get _totalConsultations => _bookings.length;
+  int get _incomingCount => _bookings.where((b) => !b.isPastSlot && b.status.toUpperCase() == 'CONFIRMED').length;
+  int get _completedConsultations => _bookings.where((b) => b.status.toUpperCase() == 'COMPLETED').length;
+  int get _pendingConsultations => _bookings.where((b) => b.status.toUpperCase() == 'PENDING').length;
+
   // List<ConsultationBooking> _recentBookings() {
   //   final sorted = List<ConsultationBooking>.from(_bookings)
   //     ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
   //   return sorted.take(4).toList();
   // }
+
 
 
   @override
@@ -91,7 +95,7 @@ class _InstructorDashboardPageState extends State<InstructorDashboardPage> {
             children: [
               DashboardHeader(instructorName: _teacherInfo?.firstName ?? '', avatarUrl: _teacherInfo?.avatarUrl,),
               // SizedBox(height: 20),
-              // BookingStatGrid(totalConsultations: _metrics['total_consultations'] ?? 0, incomingConsultations: _metrics['incoming_consultations'] ?? 0, completedConsultations: _metrics['completed_consultations'] ?? 0, pendingConsultations: _metrics['no_show_consultations'] ?? 0),
+              BookingStatGrid(totalConsultations: _totalConsultations ?? 0, incomingConsultations: _incomingCount ?? 0, completedConsultations: _completedConsultations ?? 0, pendingConsultations: _pendingConsultations ?? 0),
               // SizedBox(height: 20),
               // RecentActivityCard(recentBookings: _recentBookings(), onViewAll: widget.onViewAllActivity,)
             ],
