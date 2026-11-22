@@ -99,6 +99,7 @@ class _AvailableSlotSectionState extends State<AvailableSlotSection> {
     return Column(
       children: [
         const SectionHeader(step: 2, title: 'Select Available Slot'),
+        SizedBox(height: 5,),
         Card(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -251,7 +252,7 @@ class _AvailableSlotSectionState extends State<AvailableSlotSection> {
               ),
             ),
           ),
-          const SizedBox(height: 6,),
+          const SizedBox(height: 5,),
           if (dailySlots.isEmpty)
             const Align(
               alignment: Alignment.centerLeft,

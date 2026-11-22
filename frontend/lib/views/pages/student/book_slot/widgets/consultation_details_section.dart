@@ -27,6 +27,7 @@ class _ConsultationDetailsSectionState extends State<ConsultationDetailsSection>
       child: Column(
         children: [
           SectionHeader(title: "Consultation Details", step: 3),
+          SizedBox(height: 5,),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -34,7 +35,7 @@ class _ConsultationDetailsSectionState extends State<ConsultationDetailsSection>
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),),
-              //sizebox
+              SizedBox(height: 5,),
               TextFormField(
                 controller: _reasonController,
                 maxLines: 4,
@@ -67,8 +68,6 @@ class _ConsultationDetailsSectionState extends State<ConsultationDetailsSection>
                 },
               ),
               const SizedBox(height: 8),
-              const SizedBox(height: 16),
-
               SizedBox(
                 width: double.infinity,
                 height: 48,

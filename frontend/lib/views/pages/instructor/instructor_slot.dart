@@ -327,10 +327,10 @@ class _InstructorSlotState extends State<InstructorSlot> {
                   ),
                 ],
               ),
+              SizedBox(height: 5,),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Slot overview'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -425,7 +425,7 @@ class _InstructorSlotState extends State<InstructorSlot> {
                   ),
                 ],
               ),
-              //display for the list
+              SizedBox(height: 10,),
               const Text(
                 'Active Consultation Slots',
                 style: TextStyle(

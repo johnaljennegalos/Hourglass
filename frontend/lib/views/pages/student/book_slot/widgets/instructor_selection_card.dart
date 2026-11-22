@@ -36,6 +36,7 @@ class InstructorSelectionCard extends StatelessWidget {
               )
                   : null,
             ),
+            SizedBox(width: 5,),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
