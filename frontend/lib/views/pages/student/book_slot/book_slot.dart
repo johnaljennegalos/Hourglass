@@ -83,11 +83,13 @@ class _BookSlotState extends State<BookSlot> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SectionHeader(step: 1, title: 'Select Instructor & Subject',),
+                SizedBox(height: 20,),
                 InstructorSearchField(onChanged: (value) {
                   setState(() {
                     _searchQuery = value;
                   });
                 },),
+                SizedBox(height: 5,),
                 InstructorSelection(searchQuery: _searchQuery, selectedInstructorId: _selectedInstructorId, onInstructorSelected: (instructorId) {
                   setState(() {
                     _selectedInstructorId = instructorId;
@@ -95,6 +97,7 @@ class _BookSlotState extends State<BookSlot> {
 
                   print('Selected Instructor: $instructorId');
                 },),
+                SizedBox(height: 10,),
                 if (_selectedInstructorId != null)
                   AvailableSlotSection(
                     instructorId: _selectedInstructorId!,
@@ -106,7 +109,7 @@ class _BookSlotState extends State<BookSlot> {
                     },
                   ),
                 if (_selectedDate != null && _selectedSlotId != null) ...[
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 10),
                   ConsultationDetailsSection(
                     isSubmitting: _isSubmitting,
                     onSubmit: (String reason) {
