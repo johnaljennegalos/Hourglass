@@ -9,7 +9,7 @@
     <!-- Required for taking photos with Camera -->
     <uses-permission android:name="android.permission.CAMERA" />
     <application
-        android:label="parsu_consult_frontend"
+        android:label="Hourglass"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
