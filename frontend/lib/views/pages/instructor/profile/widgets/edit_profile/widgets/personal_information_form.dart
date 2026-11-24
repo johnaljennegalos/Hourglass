@@ -83,6 +83,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Personal Information"),
+          SizedBox(height: 10,),
           TextFormField(
             controller: employeeIDController,
             enabled: isEmployeeIdEditable,
@@ -97,6 +98,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 10,),
           TextFormField(
             controller: firstNameController,
             style: const TextStyle(color: Colors.black87),
@@ -110,6 +112,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 10,),
           TextFormField(
             controller: lastNameController,
             style: const TextStyle(color: Colors.black87),
@@ -123,6 +126,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 10,),
           TextFormField(
             controller: emailController,
             enabled: false,
@@ -137,6 +141,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 10,),
           TextFormField(
             controller: addressController,
             style: const TextStyle(color: Colors.black87),
@@ -150,6 +155,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 10,),
           TextFormField(
             controller: contactNumberController,
             style: const TextStyle(color: Colors.black87),
@@ -163,6 +169,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 10,),
           DropdownButtonFormField<String>(
           value: selectedDepartment,
           style: const TextStyle(color: Colors.black87),
@@ -192,6 +199,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
           },
           validator: (value) => (value == null || value.isEmpty) ? 'Please select a department' : null,
         ),
+        SizedBox(height: 10,),
           TextFormField(
             controller: specializationController,
             style: const TextStyle(color: Colors.black87),
@@ -205,6 +213,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 20,),
           OutlinedButton.icon(
             onPressed: () async {
               if (_formKey.currentState!.validate()){

@@ -20,7 +20,7 @@ class BookingStatGrid extends StatelessWidget {
                   title: 'Total',
                   value: totalConsultations,
                   iconData: Icons.calendar_today_rounded,
-                  accentColor: Colors.blue
+                  accentColor: Color(0xFF2563EB),
               ),
             ),
             SizedBox(width: 12),
@@ -29,7 +29,7 @@ class BookingStatGrid extends StatelessWidget {
                   title: 'Upcoming',
                   value: incomingConsultations,
                   iconData: Icons.schedule_rounded,
-                  accentColor: Colors.amber.shade700
+                  accentColor: Color(0xFF0D9488),
               ),
             )
           ],
@@ -43,7 +43,7 @@ class BookingStatGrid extends StatelessWidget {
                   title: 'Completed',
                   value: completedConsultations,
                   iconData: Icons.check_circle_outline_rounded,
-                  accentColor: Colors.teal
+                  accentColor: Color(0xFF16A34A)
               ),
             ),
             SizedBox(width: 12),
@@ -52,7 +52,7 @@ class BookingStatGrid extends StatelessWidget {
                   title: 'Pending',
                   value: pendingConsultations,
                   iconData: Icons.hourglass_top_rounded,
-                  accentColor: Colors.orange
+                  accentColor: Color(0xFFD97706),
               ),
             )
           ],
