@@ -43,6 +43,7 @@ dependencies:
   intl: ^0.20.3
   image_picker: ^1.2.4
   profile_lift: ^0.0.1
+  introduction_screen: ^5.0.1
 
 dev_dependencies:
   flutter_test:
