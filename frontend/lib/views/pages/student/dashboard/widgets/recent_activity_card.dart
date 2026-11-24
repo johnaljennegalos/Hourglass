@@ -12,13 +12,13 @@ class RecentActivityCard extends StatelessWidget {
       case 'COMPLETED':
         return (Colors.green, Icons.check_circle_outline_rounded);
       case 'CONFIRMED':
-        return (Colors.blue, Icons.event_available_rounded);
+        return (Color(0xFF2563EB), Icons.event_available_rounded);
       case 'CANCELLED':
       case 'REJECTED':
         return (Colors.redAccent, Icons.cancel_outlined);
       case 'PENDING':
       default:
-        return (Colors.amber.shade700, Icons.schedule_rounded);
+        return (Color(0xFFD97706), Icons.schedule_rounded);
     }
   }
 
