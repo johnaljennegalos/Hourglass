@@ -193,12 +193,12 @@ class _SignInPageState extends State<SignInPage> {
 
                                   FocusScope.of(context).unfocus();
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Sign In successful!'),
-                                        backgroundColor: Colors.green,
-                                      )
-                                  );
+                                  // ScaffoldMessenger.of(context).showSnackBar(
+                                  //     const SnackBar(
+                                  //       content: Text('Sign In successful!'),
+                                  //       backgroundColor: Colors.green,
+                                  //     )
+                                  // );
 
                                   if (role == 'ST') {
                                     Navigator.pushAndRemoveUntil(
