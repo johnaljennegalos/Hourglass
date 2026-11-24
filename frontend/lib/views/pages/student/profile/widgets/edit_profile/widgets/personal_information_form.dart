@@ -117,6 +117,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 2,),
           TextFormField(
             controller: yearLevelController,
             keyboardType: TextInputType.number,
@@ -131,6 +132,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 2,),
           TextFormField(
             controller: sectionController,
             style: const TextStyle(color: Colors.black87),
@@ -144,6 +146,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 2,),
           TextFormField(
             controller: firstNameController,
             style: const TextStyle(color: Colors.black87),
@@ -157,6 +160,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 2,),
           TextFormField(
             controller: lastNameController,
             style: const TextStyle(color: Colors.black87),
@@ -170,6 +174,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 2,),
           TextFormField(
             controller: emailController,
             enabled: false,
@@ -184,6 +189,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 2,),
           TextFormField(
             controller: addressController,
             style: const TextStyle(color: Colors.black87),
@@ -197,6 +203,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 2,),
           TextFormField(
             controller: contactNumberController,
             style: const TextStyle(color: Colors.black87),
@@ -210,6 +217,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
               ),
             ),
           ),
+          SizedBox(height: 2,),
           DropdownButtonFormField<String>(
             value: selectedCourse,
             style: const TextStyle(color: Colors.black87),
@@ -235,6 +243,7 @@ class _PersonalInformationFormState extends State<PersonalInformationForm> {
             },
             validator: (value) => (value == null || value.isEmpty) ? 'Please select a course' : null,
           ),
+          SizedBox(height: 20,),
           OutlinedButton.icon(
             onPressed: () async {
               if (_formKey.currentState!.validate()){
