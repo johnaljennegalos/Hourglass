@@ -6,6 +6,7 @@ import 'package:hourglass/views/pages/role_selection_page.dart';
 import 'package:hourglass/services/auth_service.dart';
 import 'package:hourglass/views/pages/student/student_dashboard.dart';
 import 'package:hourglass/views/pages/instructor/instructor_dashboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class SignInPage extends StatefulWidget {
@@ -20,14 +21,33 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  bool isChecked = false;
   bool _obscureText = true;
+  bool _rememberMe = false;
 
   @override
   void dispose () {
    usernameController.dispose();
    passwordController.dispose();
    super.dispose();
+  }
+
+  @override
+  void initState() {
+    _loadSavedUsername();
+    super.initState();
+  }
+
+  Future<void> _loadSavedUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    if (!mounted) return;
+
+    setState(() {
+      _rememberMe = prefs.getBool('remember_me') ?? false;
+      if (_rememberMe) {
+        usernameController.text = prefs.getString('saved_username') ?? '';
+      }
+    });
   }
 
   @override
@@ -152,12 +172,12 @@ class _SignInPageState extends State<SignInPage> {
                                     vertical: -2,
                                   ),
                                   checkboxScaleFactor: 0.8,
-                                  value: isChecked,
+                                  value: _rememberMe,
                                   controlAffinity: ListTileControlAffinity.leading,
                                   contentPadding: EdgeInsets.zero,
                                   onChanged: (bool? value) {
                                     setState(() {
-                                      isChecked = value ?? false;
+                                      _rememberMe = value ?? false;
                                     });
                                   },
                                 ),
@@ -190,15 +210,19 @@ class _SignInPageState extends State<SignInPage> {
                                 if (!mounted) return;
 
                                 if (isSuccess) {
+                                  final prefs = await SharedPreferences.getInstance();
+
+                                  if(_rememberMe) {
+                                    await prefs.setBool('remember_me', true);
+                                    await prefs.setString('saved_username', usernameController.text.trim());
+                                  } else {
+                                    await prefs.remove('remember_me');
+                                    await prefs.remove('saved_username');
+                                  }
+
+                                  if (!mounted) return;
 
                                   FocusScope.of(context).unfocus();
-
-                                  // ScaffoldMessenger.of(context).showSnackBar(
-                                  //     const SnackBar(
-                                  //       content: Text('Sign In successful!'),
-                                  //       backgroundColor: Colors.green,
-                                  //     )
-                                  // );
 
                                   if (role == 'ST') {
                                     Navigator.pushAndRemoveUntil(
