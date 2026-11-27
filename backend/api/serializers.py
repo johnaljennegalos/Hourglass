@@ -2,7 +2,7 @@ from enum import nonmember
 from getpass import fallback_getpass
 
 from rest_framework import serializers
-from .models import User, ConsultationSlot, Notification, ConsultationBooking
+from .models import User, ConsultationSlot, Notification, ConsultationBooking, PasswordResetOTP
 from django.db import transaction
 from django.db.models import Q
 from django.contrib.auth.password_validation import validate_password
@@ -873,3 +873,16 @@ class NotificationMarkReadSerializer(serializers.ModelSerializer):
         model = Notification
         fields = ['id', 'is_read']
         read_only_fields = ['id']
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    code = serializers.RegexField(regex=r"^\d{6}$", error_messages={"invalid": "Enter a valid 6-digit code."})
+    new_password = serializers.CharField(write_only=True, min_length=6)
+
+    def validate_new_password(self, value):
+        validate_password(value)
+        return value
